@@ -12,7 +12,6 @@ from kivy.uix.button import Button
 
 found = set()   
 
-
 class  CamBox(BoxLayout):
 
     def __init__(self, user, **kwargs):
