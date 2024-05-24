@@ -1,0 +1,67 @@
+#:kivy 2.2.1
+
+
+<Login>
+    name: "login"
+    BoxLayout:
+        orientation: "vertical"
+        id: sucursales
+        BoxLayout:
+            orientation: "vertical"
+            TextInput:
+                id: username
+                multiline: False
+
+            TextInput:
+                id: password
+                multiline: False
+            
+        Button:
+            text:'Inicia sesion'
+            on_release:
+                root.manager.transition.direction = "up"
+                root.login(username, password)
+  
+
+<Main>
+
+    name: "main"
+    
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            id: box_header
+            height: 35
+            size_hint_y: None
+            orientation: 'horizontal'
+            Label:
+                text: 'Hoja de Ruta'  
+            Button:
+                text:'Cerrar sesion'
+                on_press: 
+                on_release:
+                    root.manager.transition.direction = "down"
+                    root.logOut(box_body)
+        
+        BoxLayout:
+            id: box_body
+            orientation: 'vertical'
+
+        
+        BoxLayout:
+            orientation:'horizontal'
+            height: 35
+            size_hint_y: None
+            id: box_butom
+
+            Button:
+                text:'inicio'
+         
+            Button:
+                text:'Qr'
+                on_press: root.go_cam(box_body)
+            Button:
+                text:'sucursal'
+                
+  
+            
