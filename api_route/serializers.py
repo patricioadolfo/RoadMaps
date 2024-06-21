@@ -8,6 +8,7 @@ class RouteSerializer(serializers.ModelSerializer):
     origin_name = serializers.ReadOnlyField(source='origin.name')
     destination_name = serializers.ReadOnlyField(source='destination.name')
     
+    
     class Meta:
         model = models.Route
         read_only_fields = ('origin_name', 'destination_name')
@@ -30,7 +31,7 @@ class instanceSerializer(serializers.ModelSerializer):
 class OriginSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.NodeOrigin
-        fields = "__all__"
+        fields = ['id', 'name','address', 'phoneNumber']
         
 class DestinationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

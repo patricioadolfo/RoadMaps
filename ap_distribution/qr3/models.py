@@ -8,28 +8,16 @@ import time
 http://127.0.0.1:8000/api/api-route/?q=c filtro en camino
 http://127.0.0.1:8000/api/api-route/?q=p filtro preparado
 http://127.0.0.1:8000/api/api-route/?q=r filtro recibido
+http://192.168.0.5:8080/api/api-route/?q=p!5 filtro estado preparado, origen 5
 
 """
 
 
-
-
-
 class Route:
     
-    def __init__(self,):
+    def __init__(self,):    
         
-        self.url=''
-        
-        url_base='http://127.0.0.1:8000/api/'
-
-        self.url_route= url_base + 'api-route/'
-
-        self.url_instance= url_base + 'api-instance/'
-
-        self.url_id_user= url_base + 'api-user/'
-
-        self.url_origin= url_base + 'api-origin/'    
+        pass
         
     def get_url(self, id):
         
@@ -56,6 +44,10 @@ class Route:
 
 class User(Route):
     
+    def __init__(self,):
+        
+        self.id_user= {}
+    
     def view_nodes(self,):
         
         self.url= self.url_origin
@@ -64,16 +56,29 @@ class User(Route):
         
         return get['results']
     
-    def log(self, user, passwd):
+    def log(self, url, user, passwd):
+        
+        self.url=''
+                
+        self.url_base= url
+
+        self.url_route= self.url_base + 'api-route/'
+
+        self.url_instance= self.url_base + 'api-instance/'
+
+        self.url_id_user= self.url_base + 'api-user/'
+
+        self.url_origin= self.url_base + 'api-origin/'    
+   
         
         self.auth=  HTTPBasicAuth(user, passwd)
         
         id= requests.get( self.url_id_user, auth= self.auth)
         
-        self.origin= self.view_nodes()
+        self.nodes_origin= self.view_nodes()
         
         self.id_user= id.json()['results'][0]
-        
+                
     def logOut(self,):
         
         self.auth= HTTPBasicAuth('','')
@@ -111,20 +116,14 @@ class User(Route):
         
         return get['results']
 
-    def view_road(self, id_route):
+    def view_road(self, query):
         
         self.url= self.url_route
         
-        print(id_route)
+        route= self.get_url(query)
         
-        route= self.get_url(id_route)
+        return route
         
-        try:
-            route= 'Destino: '+ route['destination_name'] + '\n' + 'Detalle: '+ route['description']+ '\n' + 'Preparado: ' + route['preparation_date']
-        
-            return route
-        
-        except:
-            
-            return route
 
+        
+        

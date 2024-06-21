@@ -1,6 +1,5 @@
 from .serializers import RouteSerializer, OriginSerializer, DestinationSerializer, instanceSerializer, UserSerializer
 from rest_framework import permissions, viewsets
-
 from route import models
 from django.contrib.auth.models import User 
 
@@ -13,11 +12,26 @@ class RouteSerializerViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         
         if self.request.method == 'GET':
-            queryset = models.Route.objects.all().order_by('-preparation_date')
-            state = self.request.GET.get('q', None)
-            if state is not None:
-                queryset = queryset.filter(status= state)
-            return queryset
+            
+            query_p = self.request.GET.get('p', None)
+            
+            query_c = self.request.GET.get('c', None)
+            
+            if query_p is not None:
+                
+                state, origin_id= query_p.split('!')
+                
+                return models.Route.objects.filter(status= state).filter(origin= origin_id)
+            
+            elif query_c is not None:
+                
+                state, destination_id= query_c.split('!')
+                
+                return models.Route.objects.filter(status= state).filter(destination= destination_id)
+            
+            else:
+                queryset = models.Route.objects.all().order_by('-preparation_date')
+                return queryset
 
         else:
             queryset = models.Route.objects.all().order_by('-preparation_date')
@@ -32,7 +46,7 @@ class InstanceSerializerViewSet(viewsets.ModelViewSet):
 
 class OriginSerializerViewSet(viewsets.ModelViewSet):
 
-    queryset = models.NodeOrigin.objects.all().order_by('name')
+    queryset = models.NodeOrigin.objects.all().order_by('id')
     serializer_class = OriginSerializer
     permission_classes = [permissions.IsAuthenticated]
     
