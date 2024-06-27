@@ -2,19 +2,19 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.list import MDListItem, MDListItemLeadingIcon, MDListItemHeadlineText, MDListItemSupportingText, MDListItemTertiaryText, MDListItemTrailingIcon
 
 
-class Branch(MDScreen):
+class BranchScreen(MDScreen):
     
     def node_details(self, instance, *args):
 
-        prepared= self.user.view_road('?p=p!'+ str(instance.ids['id']))
+        prepared= self.screen_manager.user.view_road('?p=p!'+ str(instance.ids['id']))
         
-        on_road= self.user.view_road('?c=c!'+ str(instance.ids['id']))
+        on_road= self.screen_manager.user.view_road('?c=c!'+ str(instance.ids['id']))
              
-        self.box_details.ids.branch_details_lb.text= instance.ids['name']
+        self.branch_details.ids.branch_details_lb.text= instance.ids['name']
 
         for item in prepared['results']:
             
-            self.box_details.ids.branch_details_p.add_widget(MDListItem(
+            self.branch_details.ids.branch_details_p.add_widget(MDListItem(
                                                         MDListItemHeadlineText(
                                                             text= '###'+ str(item['id']),
                                                         ),
@@ -32,7 +32,7 @@ class Branch(MDScreen):
         
         for item in on_road['results']:
             
-            self.box_details.ids.branch_details_c.add_widget(MDListItem(
+            self.branch_details.ids.branch_details_c.add_widget(MDListItem(
                                                         MDListItemHeadlineText(
                                                             text= '###'+ str(item['id']),
                                                             ),
@@ -47,22 +47,22 @@ class Branch(MDScreen):
                                                             ),
                                                         ))
         
-        self.box.parent.current= 'Sucursal-detail'
+        self.screen_manager.current= 'branchdetailsscreen'
         
-    def branch_nodes(self, box, box_details):
+    def branch_nodes(self, screen_manager, branch_details):
         
-        self.box= box
+        self.branch_details= branch_details
         
-        self.box_details= box_details
+        self.screen_manager= screen_manager
+
+        self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
         
-        box.ids.mdlist.clear_widgets(box.ids.mdlist.children)
+        if screen_manager.user.id_user != {}:
         
-        if self.user.id_user != {}:
-        
-            nodes= self.user.nodes_origin
+            nodes= screen_manager.user.nodes_origin
             
             for node in nodes:
-                box.ids.mdlist.add_widget(MDListItem(
+                self.ids.mdlist.add_widget(MDListItem(
                     MDListItemLeadingIcon(
                         icon='map-marker-radius-outline',
                             ),
@@ -85,9 +85,9 @@ class Branch(MDScreen):
                 
 class BranchDetails(MDScreen):
     
-    def close_card(self, *args):
+    def back_branchsecreen(self, *args):
         
-        self.parent.current= 'Sucursales'
+        self.parent.current= 'branchscreen'
         
         self.ids.branch_details_p.clear_widgets(self.ids.branch_details_p.children)
         

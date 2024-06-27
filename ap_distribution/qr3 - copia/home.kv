@@ -1,5 +1,42 @@
+<RmScreenManager>
+<ScanAnalyze>
+<HomeScreen>
+    name: 'homescreen'
+    
+    MDLabel:
+        text: 'Home' 
+        pos_hint: {'center_x': .5,'center_y': .5}
+        text: "Login"
+        bold: True
+        font_style: "Title"
+        halign: "center"
+
+<QrScreen>
+    name: 'qrscreen'
+    ScanAnalyze:
+        id: scan
+        aspect_ratio: '16:9'
+        extracted_data: self.parent.got_result
+    MDBoxLayout:
+        orientation: 'horizontal'
+        size_hint: (.7, .2)
+        pos_hint: {'center_x': .5,'center_y': .1}
+        spacing: '15dp'
+                        
+    
+        MDLabel:
+            id: lab_qr
+            text: ''
+            color: 'white'
+            bold: True
+            font_style: "Headline"
+            role: "small"
+            pos_hint: {'center_x': .5,'center_y': .5}
+                            
+                            
+
 <BranchDetails>
-    name: 'Sucursal-detail'
+    name: 'branchdetailsscreen'
     MDBoxLayout:
         orientation: 'vertical'
         MDBoxLayout:
@@ -10,7 +47,7 @@
             MDIconButton:
                 icon: 'keyboard-backspace' 
                 pos_hint: {'center_x': .1, 'center_y': .5}
-                on_press: root.close_card()
+                on_press: root.back_branchsecreen()
             MDLabel:
                 id: branch_details_lb
                 text: '' 
@@ -48,8 +85,8 @@
                         id: branch_details_c
         
 
-<Branch>
-    name: 'Sucursales'
+<BranchScreen>
+    name: 'branchscreen'
     MDScrollView:
 
         MDList:
@@ -81,7 +118,9 @@
         MDIconButton:
             icon: 'close' 
             pos_hint: {'center_x': .9, 'center_y': .5}
-            on_press: root.close_card()
+            on_press: 
+                root.close_card()
+                
 
     MDBoxLayout:
         id: box_qr_card
@@ -99,7 +138,8 @@
             pos_hint: {'center_x': .5, 'center_y': 1}
             
 
-<Login>
+<LoginScreen>
+    name: 'loginscreen'
 
     MDLabel:
         text: "Login"
@@ -176,7 +216,18 @@
             halign: "center"
             on_release:
                 root.manager.transition.direction = "up"
-                root.login(url, username, password, app.user)
+                root.login(url, username, password)
+
+<LogOutScreen>
+    name: 'logoutscreen'
+    
+    MDLabel:
+        text: 'Logout' 
+        pos_hint: {'center_x': .5,'center_y': .5}
+        text: "Login"
+        bold: True
+        font_style: "Title"
+        halign: "center"
 
 <BaseMDNavigationItem>
 
@@ -187,7 +238,7 @@
         text: root.text
 
 
-<BaseScreen>
+
 
 
 MDBoxLayout:
@@ -218,35 +269,32 @@ MDBoxLayout:
             color: app.theme_cls.backgroundColor
             pos_hint: {'center_x': .4, 'center_y': .5}
             on_press: 
-                root.ids.screen_manager.current= 'login' if self.icon == "account"  else screenlogin.logout(app.user, home_btn, qr_btn, branch_btn, self)
-                app.cam.close_cam(box_body)
+                root.ids.screen_manager.current= 'loginscreen' if self.icon == "account"  else login_screen.logout(home_btn, qr_btn, branch_btn, btn_log, screen_manager)
+             
 
 
-    MDScreenManager:
+    RmScreenManager:
         id: screen_manager
 
-        Login:
-            id: screenlogin
-            name: 'login'
+        LoginScreen:
+            id: login_screen
+        
+        LogOutScreen:
+            id: logout_screen
 
-        BaseScreen:
-            name: "Home"
-            id: box_home
+        HomeScreen:
+            id: home_screen
 
-        BaseScreen:
-            name: "Qr-Scan"
-            id: box_body
+        QrScreen:
+            id: qr_screen
 
-        Branch:
-            id: screen_branch
-            name: 'Sucursales'
+        BranchScreen:
+            id: branch_screen
 
         BranchDetails:
-            id: screen_branch_details
-            name: 'Sucursal-detail'
+            id: branch_details
 
     MDNavigationBar:
-        on_switch_tabs: app.on_switch_tabs(*args)
         md_bg_color: '#7792C4'
         radius: dp(24)
 
@@ -255,14 +303,18 @@ MDBoxLayout:
             icon: "home"
             text: "Home"
             disabled: True
-            on_press: app.cam.close_cam(box_body)
+            on_press: 
+                qr_screen.close_cam()
+                screen_manager.current= 'homescreen'
 
         BaseMDNavigationItem
             id: qr_btn
             icon: "qrcode-scan"
             text: "Qr-Scan"
             disabled: True
-            on_press: app.cam.run(box_body)
+            on_press: 
+                qr_screen.on_focus()
+                screen_manager.current= 'qrscreen'
 
         BaseMDNavigationItem
             id: branch_btn
@@ -270,9 +322,10 @@ MDBoxLayout:
             text: "Sucursales"
             disabled: True
             on_press: 
-                app.cam.close_cam(box_body)
-                root.ids.screen_manager.current= 'Sucursales'
-                app.branch.branch_nodes(screen_branch,  screen_branch_details)
+                qr_screen.close_cam()
+                branch_screen.branch_nodes(screen_manager, branch_details)
+                screen_manager.current= 'branchscreen'
+              
             
 
 

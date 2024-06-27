@@ -6,7 +6,7 @@ from kivymd.uix.screen import MDScreen
 from scan import ScanAnalyze
 from scan import QrCard
 from login import Login
-from branch import Branch, BranchCard
+from branch import Branch, BranchDetails
 import models
 
 
@@ -20,7 +20,8 @@ class BaseMDNavigationItem(MDNavigationItem):
 
 
 class BaseScreen(MDScreen):
-    image_size = StringProperty()
+    pass
+    #image_size = StringProperty()
         
 
 class RoadMapsApp(MDApp):
