@@ -8,6 +8,7 @@ from login import LoginScreen, LogOutScreen
 from branch import BranchScreen, BranchDetails
 import models   
 from kivymd.uix.screenmanager import MDScreenManager
+from kivymd.utils.set_bars_colors import set_bars_colors
 
 
 #from android.permissions import request_permissions, Permission
@@ -15,6 +16,7 @@ from kivymd.uix.screenmanager import MDScreenManager
 #request_permissions([Permission.CAMERA, Permission.INTERNET])
 
 class BaseMDNavigationItem(MDNavigationItem):
+    
     icon = StringProperty()
     text = StringProperty()
 
@@ -27,7 +29,7 @@ class RmScreenManager(MDScreenManager):
     
     def login_out(self, log, btns):
         
-        if log.icon == 'account':
+        if log.icon == 'account-circle-outline':
            
            self.current= 'loginscreen'
            
@@ -36,7 +38,7 @@ class RmScreenManager(MDScreenManager):
             
             self.current= 'logoutscreen' 
             
-            log.icon= 'account'
+            log.icon= 'account-circle-outline'
             
             for btn in btns:
                 
@@ -50,12 +52,21 @@ class RoadMapsApp(MDApp):
     def build(self):
 
         self.theme_cls.primary_palette = "Lightsteelblue"
+        
+        self.set_bars_colors()
        
-        self.theme_cls.theme_style = "Light"    
+        self.theme_cls.theme_style = "Dark"    
  
         self.theme_cls.primary_hue = "A700"
            
         return Builder.load_file('home.kv')
+    
+    def set_bars_colors(self):
+        set_bars_colors(
+            self.theme_cls.primaryContainerColor,  # status bar color
+            self.theme_cls.primaryContainerColor,  # navigation bar color
+            "Light",                       # icons color of status bar
+        )
     
 
 RoadMapsApp().run()

@@ -1,5 +1,4 @@
 import requests
-from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import time
 
@@ -29,8 +28,7 @@ class Route:
         
         else:
             return 'Error!'
-
-            
+           
     def patch_url(self, id, payload):
         
         self.url= self.url +  id +'/'
@@ -42,8 +40,7 @@ class Route:
             csrftoken = self.client.cookies['csrftoken']
         
             self.client.patch(self.url, data= payload, headers={'X-CSRFTOKEN': csrftoken})
-            
-            
+                        
     def post_url(self, payload):
         
         self.client.get(self.url) 
@@ -58,7 +55,6 @@ class Route:
             
             self.client.post(self.url, data= payload, headers=dict(Referer= self.url))
         
-       
 
 
 class User(Route):
@@ -89,6 +85,8 @@ class User(Route):
    
         self.url_login= url + 'api-auth/login/'
         
+        self.url_logout= url + 'api-auth/logout/'
+        
         self.client = requests.session()
         
         self.client.get(self.url_login) 
@@ -106,10 +104,14 @@ class User(Route):
             self.nodes_origin= self.view_nodes()
                           
     def logOut(self,):
-        
-        self.auth= HTTPBasicAuth('','')
-        
+
         self.id_user= {}
+        
+        if 'csrftoken' in self.client.cookies:
+
+            csrftoken = self.client.cookies['csrftoken']
+       
+            self.client.post(self.url_logout, data=dict(csrfmiddlewaretoken=csrftoken, next=''), headers=dict(Referer= self.url_logout))
     
     def on_road(self, id_route):
         

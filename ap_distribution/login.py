@@ -16,7 +16,7 @@ class LoginScreen(MDScreen):
             
             self.parent.current= 'homescreen'
             
-            self.parent.parent.children[-1].children[0].icon= 'logout'    
+            self.parent.parent.ids.btn_log.icon= 'logout'    
             
             self.parent.parent.ids.qr_btn.disabled= False
             

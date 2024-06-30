@@ -52,7 +52,7 @@
                 text: '' 
                 halign: 'center'
                 font_style: "Title"
-                color: '#1f91dc'
+                color: app.theme_cls.primaryContainerColor
                 bold: True       
                 pos_hint: {'center_x': .5, 'center_y': .5}
 
@@ -235,39 +235,35 @@
     MDNavigationItemLabel:
         text: root.text
 
-
-
-
-
 MDBoxLayout:
     orientation: "vertical"
     md_bg_color: app.theme_cls.backgroundColor
-
-    MDBoxLayout:
+    
+    MDTopAppBar:
+        type: "small"
         id: box_header
-        md_bg_color: '#1f91dc'
-        pos_hint: {'center_x': .5, 'center_y': 0.8}
-        size_hint_y: .1
-        orientation: 'horizontal'
-        padding:10   
-  
+        title: "Hoja de Ruta"
 
-        MDLabel:
-            text: 'Hoja de Ruta' 
-            font_style: "Title"
-            bold: True
-            color:  app.theme_cls.backgroundColor      
-            pos_hint: {'center_x': .2, 'center_y': .5}
-        
-        MDIconButton:
-            id: btn_log
-            icon: "account"
-            color: app.theme_cls.backgroundColor
-            pos_hint: {'center_x': .4, 'center_y': .5}
-            on_press: 
-                root.ids.screen_manager.login_out(btn_log, [home_btn, qr_btn, branch_btn])
-                root.ids.qr_screen.close_cam()
+        MDTopAppBarLeadingButtonContainer:
 
+
+            MDActionTopAppBarButton:
+                icon: "menu"
+
+        MDTopAppBarTrailingButtonContainer:
+            pos_hint: {"center_x": .9}
+
+
+            MDActionTopAppBarButton:
+                icon: "account-circle-outline"
+
+                id: btn_log
+                on_press: 
+                    root.ids.screen_manager.login_out(btn_log, [home_btn, qr_btn, branch_btn])
+                    root.ids.qr_screen.close_cam()
+
+    MDDivider:
+ 
     RmScreenManager:
         id: screen_manager
 
@@ -290,8 +286,8 @@ MDBoxLayout:
             id: branch_details
 
     MDNavigationBar:
-        md_bg_color: '#7792C4'
-        radius: dp(24)
+        radius: dp(18)
+        md_bg_color: app.theme_cls.secondaryContainerColor
 
         BaseMDNavigationItem
             id: home_btn
