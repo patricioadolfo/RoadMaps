@@ -1,9 +1,0 @@
-car-estate
-hospital
-map
-medical
-package
-send
-truck
-van
-view
