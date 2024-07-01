@@ -52,7 +52,7 @@
                 text: '' 
                 halign: 'center'
                 font_style: "Title"
-                color: app.theme_cls.primaryContainerColor
+                color: app.theme_cls.primaryColor
                 bold: True       
                 pos_hint: {'center_x': .5, 'center_y': .5}
 
@@ -124,14 +124,14 @@
     MDBoxLayout:
         id: box_qr_card
         size_hint_y: .8
-        md_bg_color: '#1f91dc'
+        md_bg_color: app.theme_cls.primaryColor
         orientation: 'vertical'
         padding: '15dp'
         radius: dp(15)
         MDLabel:
             id: lb_box_card
             text: ''
-            color:  "#1f91dc"
+            color: 'black'
             adaptive_size: True
             bold: True 
             pos_hint: {'center_x': .5, 'center_y': 1}
@@ -241,29 +241,26 @@ MDBoxLayout:
     md_bg_color: app.theme_cls.backgroundColor
     
     MDTopAppBar:
-        type: "medium"
+        type: "small"
         id: box_header
-        theme_bg_color: "Custom"
-        md_bg_color: "#1f91dc"
 
+        MDTopAppBarLeadingButtonContainer:
 
-        MDTopAppBarTitle:
-            text: "Hoja de Ruta"
-            font_style: "Title"
-            bold: True  
-            halign: "center"
-            pos_hint: {"center_x": .5}
-
-        MDTopAppBarTrailingButtonContainer:
-            size_hint_x: .2
-            pos_hint: {'center_x': .9,'center_y': .5}
             MDActionTopAppBarButton:
                 icon: 'theme-light-dark'
                 on_release: app.switch_theme_style()
 
+        MDTopAppBarTitle:
+            text: "Hoja de Ruta"
+            font_style: "Title"
+            color: app.theme_cls.primaryColor
+            bold: True  
+
+        MDTopAppBarTrailingButtonContainer:
+            pos_hint: {"center_x": 1}
+
             MDActionTopAppBarButton:
                 icon: "account-circle-outline"
-
                 id: btn_log
                 on_press: 
                     root.ids.screen_manager.login_out(btn_log, [home_btn, qr_btn, branch_btn])

@@ -71,10 +71,11 @@ class RoadMapsApp(MDApp):
             self.theme_cls.theme_style = "Dark"
     
     def set_bars_colors(self):
+        
         set_bars_colors(
-            '#1f91dc',  # status bar color
-            '#1f91dc',  # navigation bar color
-            "Dark",                       # icons color of status bar
+            self.theme_cls.backgroundColor,  # status bar color
+            self.theme_cls.backgroundColor,  # navigation bar color
+            self.theme_cls.theme_style,      # icons color of status bar
         )
     
 
