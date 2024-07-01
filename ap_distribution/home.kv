@@ -235,7 +235,8 @@
     MDNavigationItemLabel:
         text: root.text
 
-MDBoxLayout:
+
+MDScreen:
     orientation: "vertical"
     md_bg_color: app.theme_cls.backgroundColor
     
@@ -243,12 +244,19 @@ MDBoxLayout:
         type: "small"
         id: box_header
         title: "Hoja de Ruta"
+        theme_bg_color: "Custom"
+        md_bg_color: "#1f91dc"
 
         MDTopAppBarLeadingButtonContainer:
 
-
             MDActionTopAppBarButton:
                 icon: "menu"
+
+        MDTopAppBarTitle:
+            text: "Hoja de Ruta"
+            font_style: "Title"
+            bold: True  
+            pos_hint: {"center_x": .5}
 
         MDTopAppBarTrailingButtonContainer:
             pos_hint: {"center_x": .9}
