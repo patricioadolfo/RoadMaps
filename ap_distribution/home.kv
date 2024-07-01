@@ -131,7 +131,7 @@
         MDLabel:
             id: lb_box_card
             text: ''
-            color:  app.theme_cls.backgroundColor
+            color:  "#1f91dc"
             adaptive_size: True
             bold: True 
             pos_hint: {'center_x': .5, 'center_y': 1}
@@ -236,31 +236,30 @@
         text: root.text
 
 
-MDScreen:
+MDBoxLayout:
     orientation: "vertical"
     md_bg_color: app.theme_cls.backgroundColor
     
     MDTopAppBar:
-        type: "small"
+        type: "medium"
         id: box_header
-        title: "Hoja de Ruta"
         theme_bg_color: "Custom"
         md_bg_color: "#1f91dc"
 
-        MDTopAppBarLeadingButtonContainer:
-
-            MDActionTopAppBarButton:
-                icon: "menu"
 
         MDTopAppBarTitle:
             text: "Hoja de Ruta"
             font_style: "Title"
             bold: True  
+            halign: "center"
             pos_hint: {"center_x": .5}
 
         MDTopAppBarTrailingButtonContainer:
-            pos_hint: {"center_x": .9}
-
+            size_hint_x: .2
+            pos_hint: {'center_x': .9,'center_y': .5}
+            MDActionTopAppBarButton:
+                icon: 'theme-light-dark'
+                on_release: app.switch_theme_style()
 
             MDActionTopAppBarButton:
                 icon: "account-circle-outline"

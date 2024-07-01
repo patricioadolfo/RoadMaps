@@ -61,6 +61,15 @@ class RoadMapsApp(MDApp):
            
         return Builder.load_file('home.kv')
     
+    def switch_theme_style(self):
+        
+        if self.theme_cls.theme_style == "Dark":
+            
+             self.theme_cls.theme_style= 'Light'
+        
+        else:
+            self.theme_cls.theme_style = "Dark"
+    
     def set_bars_colors(self):
         set_bars_colors(
             '#1f91dc',  # status bar color
