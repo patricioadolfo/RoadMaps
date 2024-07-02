@@ -21,13 +21,26 @@ class RouteSerializerViewSet(viewsets.ModelViewSet):
                 
                 state, origin_id= query_p.split('!')
                 
-                return models.Route.objects.filter(status= state).filter(origin= origin_id)
+                if origin_id == 'all':
+                    
+                    return models.Route.objects.filter(status= state)
+                
+                else:
+                
+                    return models.Route.objects.filter(status= state).filter(origin= origin_id)
             
             elif query_c is not None:
                 
                 state, destination_id= query_c.split('!')
                 
-                return models.Route.objects.filter(status= state).filter(destination= destination_id)
+                if destination_id == 'all':
+                    
+                    return models.Route.objects.filter(status= state)
+                
+                else:
+                
+                    return models.Route.objects.filter(status= state).filter(destination= destination_id)
+            
             
             else:
                 queryset = models.Route.objects.all().order_by('-preparation_date')
