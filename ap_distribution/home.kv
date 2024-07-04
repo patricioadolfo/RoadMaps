@@ -2,13 +2,49 @@
 <ScanAnalyze>
 <HomeScreen>
     name: 'homescreen'
-    
-    MDLabel:
-        text: 'Home' 
-        pos_hint: {'center_x': .5,'center_y': .5}
-        bold: True
-        font_style: "Title"
-        halign: "center"
+    MDScrollView:
+        
+        MDBoxLayout:
+            orientation: 'vertical'
+            MDLabel:
+                size_hint_y: .3
+                id: text_home
+                text: 'Home' 
+                pos_hint: {'center_x': .5}
+                bold: True
+                font_style: "Title"
+                halign: "center"
+            
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint_y: .3
+                pos_hint: {'center_x': .5}
+                padding: '20dp'
+
+                MDDivider:
+
+                MDLabel:
+                    id: prepared
+                    text: '' 
+                    pos_hint: {'center_x': .5}
+                    bold: True
+            
+                MDLabel:
+                    id: on_road
+                    text: '' 
+                    pos_hint: {'center_x': .5}
+                    bold: True
+        
+                MDDivider:
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint_y: .3
+
+
+
+        
+
+
 
 <QrScreen>
     name: 'qrscreen'
@@ -243,6 +279,9 @@ MDBoxLayout:
     MDTopAppBar:
         type: "small"
         id: box_header
+        theme_bg_color: "Custom"
+        id: title_ap
+        md_bg_color: app.theme_cls.primaryColor
 
         MDTopAppBarLeadingButtonContainer:
 
@@ -251,9 +290,9 @@ MDBoxLayout:
                 on_release: app.switch_theme_style()
 
         MDTopAppBarTitle:
+            
             text: "Hoja de Ruta"
             font_style: "Title"
-            color: app.theme_cls.primaryColor
             bold: True  
 
         MDTopAppBarTrailingButtonContainer:
@@ -299,8 +338,10 @@ MDBoxLayout:
             text: "Home"
             disabled: True
             on_press: 
-                qr_screen.close_cam()
                 screen_manager.current= 'homescreen'
+                qr_screen.close_cam()
+                home_screen.count_routes()
+                
 
         BaseMDNavigationItem
             id: qr_btn

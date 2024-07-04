@@ -6,6 +6,7 @@ from kivymd.uix.screen import MDScreen
 from scan import QrScreen, QrCard, ScanAnalyze
 from login import LoginScreen, LogOutScreen
 from branch import BranchScreen, BranchDetails
+from home import HomeScreen
 import models   
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.utils.set_bars_colors import set_bars_colors
@@ -19,11 +20,7 @@ class BaseMDNavigationItem(MDNavigationItem):
     
     icon = StringProperty()
     text = StringProperty()
-
-class HomeScreen(MDScreen):
-    
-    pass
-
+ 
 
 class RmScreenManager(MDScreenManager):
     
@@ -51,13 +48,15 @@ class RoadMapsApp(MDApp):
     
     def build(self):
 
-        self.theme_cls.primary_palette = "Lightsteelblue"
+        self.theme_cls.primary_palette = "Skyblue"
         
         self.set_bars_colors()
        
-        self.theme_cls.theme_style = "Dark"    
+        self.theme_cls.theme_style = "Light"    
  
         self.theme_cls.primary_hue = "A700"
+        
+        print(self.theme_cls.primaryColor)
            
         return Builder.load_file('home.kv')
     
@@ -66,9 +65,12 @@ class RoadMapsApp(MDApp):
         if self.theme_cls.theme_style == "Dark":
             
              self.theme_cls.theme_style= 'Light'
+             self.root.ids.title_ap.md_bg_color=  [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
         
         else:
             self.theme_cls.theme_style = "Dark"
+            self.root.ids.title_ap.md_bg_color=  [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
+        
     
     def set_bars_colors(self):
         
