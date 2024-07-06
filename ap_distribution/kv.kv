@@ -6,6 +6,7 @@
         
         MDBoxLayout:
             orientation: 'vertical'
+            padding: '20dp'
             MDLabel:
                 size_hint_y: .3
                 id: text_home
@@ -20,6 +21,8 @@
                 size_hint_y: .3
                 pos_hint: {'center_x': .5}
                 padding: '20dp'
+                radius: dp(15)
+                line_color: app.theme_cls.primaryColor
 
                 MDDivider:
 
@@ -127,51 +130,53 @@
         MDList:
             id: mdlist
 
-<QrCard>
+<QrDialog>    
 
-    orientation: 'vertical'
-    style: 'elevated'
-    padding: '5dp'
-    size_hint: None, None
-    pos_hint: {'center_x': .5, 'center_y': .5}
-    size: ("300dp", "250dp")
-    ripple_behavior: True
+    MDDialogHeadlineText:
+        text: 'Qr'
 
-    MDBoxLayout:
-        id: box_card
-        orientation: 'horizontal'
-        pos_hint: {'center_x': .5, 'center_y': 1}
-        padding:10
-        size_hint_y: .2
-        MDLabel:
-            id: lb_box_card
-            text: 'Qr' 
-            font_style: "Title"
-            color: '#1f91dc'
-            bold: True       
-            pos_hint: {'center_x': .2, 'center_y': .5}
-        MDIconButton:
-            icon: 'close' 
-            pos_hint: {'center_x': .9, 'center_y': .5}
+    MDDialogSupportingText:
+        id: lb_box_card
+
+    MDDialogContentContainer:
+        orientation:'vertical'
+
+        MDDivider:
+
+        MDListItem:
+            id: item_origin_dialog
+            MDListItemLeadingIcon:
+                icon:"map-marker-radius-outline"
+            MDListItemSupportingText:
+                id: origin_dialog
+
+        MDListItem:
+            id: item_destin_dialog
+            MDListItemLeadingIcon:
+                icon:"map-marker-radius"
+            MDListItemSupportingText:
+                id: destin_dialog
+
+        MDDivider:
+
+    MDDialogButtonContainer:
+        spacing:"8dp"
+        MDButton:
             on_press: 
                 root.close_card()
-                
+            MDButtonText:
+                text:"Cancel"
+        MDButton:
+            id: btn_rec
+            disabled: True
+            on_press:
+                root.receive_route() 
+            MDButtonIcon:
+                icon: 'package-variant-closed-plus'
+            MDButtonText:
+                text:'Recibir'
 
-    MDBoxLayout:
-        id: box_qr_card
-        size_hint_y: .8
-        md_bg_color: app.theme_cls.primaryColor
-        orientation: 'vertical'
-        padding: '15dp'
-        radius: dp(15)
-        MDLabel:
-            id: lb_box_card
-            text: ''
-            color: 'black'
-            adaptive_size: True
-            bold: True 
-            pos_hint: {'center_x': .5, 'center_y': 1}
-            
+
 
 <LoginScreen>
     name: 'loginscreen'
@@ -185,26 +190,29 @@
     
     MDTextField:
         id: username
-        color_mode: 'Primary'
-        hint_text: "Username"
-        icon_left: "account"
-        font_size: "20dp"
+        mode: 'filled'
         size_hint_x: .7
         pos_hint: {'center_x': .5, 'center_y': .8}
         on_text: self.text = self.text.replace(" ", "")
         write_tab: False
+        MDTextFieldHintText:
+            text: 'Usuario'
+        MDTextFieldTrailingIcon:
+            icon: "account"
 
     MDTextField:
         id: password
-        color_mode: 'primary'
-        hint_text: "Password"
+        mode: 'filled'
         password: True
-        icon: 'eye-off'
-        font_size: "20dp"
         size_hint_x: .7
         pos_hint: {'center_x': .5, 'center_y': .65}
         on_text: self.text = self.text.replace(" ", "")
         write_tab: False
+        MDTextFieldHintText:
+            text: 'Contraseña'
+        MDTextFieldTrailingIcon:
+            id: eye_pswd      
+            icon: 'eye-off'
     
     MDBoxLayout: 
         size_hint: .65, None
@@ -220,7 +228,7 @@
             pos_hint: {'center_x': .5, 'center_y': .5}
             on_press: 
                 password.password = False  if password.password == True else True
-                password.icon_right = "eye" if password.icon_right == "eye-off" else "eye-off"
+                eye_pswd.icon = "eye" if eye_pswd.icon == "eye-off" else "eye-off"
 
         MDLabel:
             text: "[ref=Show Password]Show Password[/ref]"

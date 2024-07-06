@@ -3,7 +3,7 @@ from kivy.properties import StringProperty
 from kivymd.app import MDApp
 from kivymd.uix.navigationbar import MDNavigationItem
 from kivymd.uix.screen import MDScreen
-from scan import QrScreen, QrCard, ScanAnalyze
+from scan import QrScreen, QrDialog, ScanAnalyze
 from login import LoginScreen, LogOutScreen
 from branch import BranchScreen, BranchDetails
 from home import HomeScreen
@@ -48,17 +48,15 @@ class RoadMapsApp(MDApp):
     
     def build(self):
 
-        self.theme_cls.primary_palette = "Skyblue"
+        self.theme_cls.primary_palette = "Lightblue"
         
         self.set_bars_colors()
        
         self.theme_cls.theme_style = "Light"    
  
         self.theme_cls.primary_hue = "A700"
-        
-        print(self.theme_cls.primaryColor)
            
-        return Builder.load_file('home.kv')
+        return Builder.load_file('kv.kv')
     
     def switch_theme_style(self):
         

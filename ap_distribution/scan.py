@@ -9,70 +9,66 @@ from kivy.clock import mainthread
 from kivymd.uix.card import MDCard
 from kivymd.uix.button import MDButton, MDButtonIcon, MDButtonText
 from kivymd.uix.screen import MDScreen
+from kivymd.uix.dialog import MDDialog
 
 
-class QrCard(MDCard):
+
+class QrDialog(MDDialog):
                 
-    def text_card(self, dict, lab_qr):
-        
-        self.lab_qr = lab_qr
+    def text_card(self, dict, user):
         
         self.dict= dict
         
-        self.status()
+        self.user= user 
+                
+        detail_text= self.status(dict)
         
-        origin= 'De: '+dict['origin_name']
+        self.ids.lb_box_card.text= detail_text
         
-        destin= 'Para: '+dict['destination_name']
-        
-        preparation= 'Preparado: '+ dict['preparation_date']
-        
-        time= 'A las: ' + dict['preparation_time']
-        
-        info= origin + '\n' + destin + '\n' + preparation + '\n' + time + '\n'
-        
-        self.ids.lb_box_card.text= info
-               
+        if 'origin_name' in dict:
+            
+            self.ids.origin_dialog.text= 'De '+ dict['origin_name']
+            
+            self.ids.destin_dialog.text=  'Para '+ dict['destination_name']
+                                 
     def close_card(self,):
-  
-        self.parent.remove_widget(self)
         
-        self.lab_qr.text= ''
+        self.dismiss()      
+                
+    def status(self, dict):
         
-    def status(self,):
+        if 'status' in dict:
         
-        btn_rec= MDButton(
-                        MDButtonIcon(
-                            icon="package-variant-closed-plus",
-                        ),
-                        MDButtonText(
-                            text="Recibir",
-                        ),
-                        style="elevated",   
-                        pos_hint= {'center_x': .5, 'center_y': .9},   
-                        on_press= self.receive_route
-                        )
-        
-        if self.dict['status'] == 'p':
+            if dict['status'] == 'p':
+                
+                self.ids.btn_rec.disabled= False
+                
+                detail_text= 'Envio n° {id}, preparado el dia {date} a las {time}'.format(
+                    id= str(dict['id']),
+                    date= dict['preparation_date'],
+                    time= dict['preparation_time'],
+                ) 
             
-            self.ids.box_qr_card.add_widget(btn_rec) 
+            elif dict['status'] == 'c':
+                detail_text= 'Envio n° {id} en camino'.format(id= str(dict['id']))
             
-            self.ids.lb_box_card.text= 'Recibir'
-        
-        elif self.dict['status'] == 'c':
-            self.ids.lb_box_card.text= 'En camino'
-        
-        else:
-            self.ids.lb_box_card.text= 'Recibido'
+            else:
+                detail_text= 'Envio n° {id} recibido'.format(id= str(dict['id']))
             
-    def receive_route(self, *args):
+            return detail_text
+        
+        if 'qr' in dict:
+            
+            detail_text= dict['qr'] + '\n' + dict['msj']
+            
+            return detail_text
+            
+    def receive_route(self):
     
-        self.parent.parent.user.on_road(str(self.dict['id']))
+        self.user.on_road(str(self.dict['id']))
         
-        self.parent.remove_widget(self)
-        
-        self.lab_qr.text= ''
-        
+        self.close_card()
+             
 class ScanAnalyze(Preview):
     
     extracted_data=ObjectProperty(None)
@@ -88,10 +84,10 @@ class ScanAnalyze(Preview):
             if self.extracted_data:
      
                 self.extracted_data(list_of_all_barcodes[0])
-
-
         
 class QrScreen(MDScreen):
+    
+    text_qr=''
 
     def on_focus(self,):
         
@@ -101,28 +97,23 @@ class QrScreen(MDScreen):
         
         if self.parent.user.id_user != {}:
             
-            id= self.ids.lab_qr.text
+            self.qr_card= QrDialog()
+     
+            if self.text_qr != '':
             
-            if id != '':
-            
-                route= self.parent.user.view_road(id)
+                route= self.parent.user.view_road(self.text_qr)
                 
                 if route != 'Error!':
                 
-                    qr_card= QrCard()
-                
-                    qr_card.text_card(route, self.ids.lab_qr)
-                
-                    self.add_widget(qr_card)
+                    self.qr_card.text_card(route, self.parent.user)
                 
                 else:
-                    self.ids.lab_qr.text= 'Qr Invalido'
+                    self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
   
             else:
-                self.ids.lab_qr.text= 'Qr Invalido'
+                self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
             
-        else:
-            self.ids.lab_qr.text= 'Inicie Sesion'
+            self.qr_card.open()
        
     def close_cam(self,):
         
@@ -137,9 +128,9 @@ class QrScreen(MDScreen):
     @mainthread
     def got_result(self, result):
         
-        if self.ids.lab_qr.text != result.data.decode('utf-8'):
+        if self.text_qr != result.data.decode('utf-8'):
             
-            self.ids.lab_qr.text=result.data.decode('utf-8')
+            self.text_qr = result.data.decode('utf-8')
 
             self.qr_result()
 
