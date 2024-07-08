@@ -6,15 +6,17 @@ from kivymd.uix.screen import MDScreen
 from scan import QrScreen, QrDialog, ScanAnalyze
 from login import LoginScreen, LogOutScreen
 from branch import BranchScreen, BranchDetails
-from home import HomeScreen
+from home import HomeScreen, ExpansionPanelItem
 import models   
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.utils.set_bars_colors import set_bars_colors
 
 
+
 #from android.permissions import request_permissions, Permission
 
 #request_permissions([Permission.CAMERA, Permission.INTERNET])
+
 
 class BaseMDNavigationItem(MDNavigationItem):
     
@@ -48,11 +50,13 @@ class RoadMapsApp(MDApp):
     
     def build(self):
 
-        self.theme_cls.primary_palette = "Lightblue"
+        self.theme_cls.primary_palette = "Blue"
         
         self.set_bars_colors()
        
-        self.theme_cls.theme_style = "Light"    
+        self.theme_cls.theme_style = "Dark"    
+        
+        print(self.theme_cls.primaryColor)
  
         self.theme_cls.primary_hue = "A700"
            
@@ -62,21 +66,21 @@ class RoadMapsApp(MDApp):
         
         if self.theme_cls.theme_style == "Dark":
             
-             self.theme_cls.theme_style= 'Light'
-             self.root.ids.title_ap.md_bg_color=  [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
+            self.theme_cls.theme_style= 'Light'
+            self.root.ids.title_ap.md_bg_color=  [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
         
         else:
             self.theme_cls.theme_style = "Dark"
             self.root.ids.title_ap.md_bg_color=  [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
-        
-    
+           
     def set_bars_colors(self):
         
         set_bars_colors(
-            self.theme_cls.primaryColor,  # status bar color
-            self.theme_cls.primaryColor,  # navigation bar color
+            [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0],  # status bar color
+            [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0],  # navigation bar color
             "Dark",      # icons color of status bar
         )
     
+
 
 RoadMapsApp().run()

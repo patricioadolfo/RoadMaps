@@ -1,48 +1,102 @@
 <RmScreenManager>
+<ExpansionPanelItem>
+
+    MDExpansionPanelHeader:
+
+        MDListItem:
+            theme_bg_color: "Custom"
+            md_bg_color: self.theme_cls.surfaceContainerLowColor
+            ripple_effect: False
+
+            MDListItemSupportingText:
+                text: "Supporting text"
+
+            TrailingPressedIconButton:
+                id: chevron
+                icon: "chevron-right"
+                on_release: root.tap_expansion_chevron(root, chevron)
+
+    MDExpansionPanelContent:
+        orientation: "vertical"
+        padding: "12dp", 0, "12dp", "12dp"
+        md_bg_color: self.theme_cls.surfaceContainerLowestColor
+
+        MDLabel:
+            text: "Channel information"
+            adaptive_height: True
+            padding_x: "16dp"
+            padding_y: "12dp"
+
+        MDListItem:
+            theme_bg_color: "Custom"
+            md_bg_color: self.theme_cls.surfaceContainerLowestColor
+
+            MDListItemLeadingIcon:
+                icon: "email"
+
+            MDListItemHeadlineText:
+                text: "Email"
+
+            MDListItemSupportingText:
+                text: "kivydevelopment@gmail.com"
+
+        MDListItem:
+            theme_bg_color: "Custom"
+            md_bg_color: self.theme_cls.surfaceContainerLowestColor
+
+            MDListItemLeadingIcon:
+                icon: "instagram"
+
+            MDListItemHeadlineText:
+                text: "Instagram"
+
+            MDListItemSupportingText:
+                text: "Account"
+
+            MDListItemTertiaryText:
+                text: "www.instagram.com/KivyMD"
+
 <ScanAnalyze>
 <HomeScreen>
     name: 'homescreen'
-    MDScrollView:
-        
+    
+    MDBoxLayout:
+        padding: '10dp'
+        orientation: 'vertical'
+
+        MDLabel:
+            size_hint_y: .2
+            id: text_home
+            text: '' 
+            pos_hint: {'center_x': .5, 'center_y':.9 }
+            bold: True
+            font_style: "Title"
+            halign: "center"
+
         MDBoxLayout:
             orientation: 'vertical'
+            size_hint_y: .2
+            pos_hint:  {'center_x': .5, 'center_y':.8 }
             padding: '20dp'
+            radius: dp(15)
+            line_color: app.theme_cls.primaryColor
+
             MDLabel:
-                size_hint_y: .3
-                id: text_home
-                text: 'Home' 
+                id: prepared
+                text: '' 
                 pos_hint: {'center_x': .5}
-                bold: True
-                font_style: "Title"
-                halign: "center"
-            
-            MDBoxLayout:
-                orientation: 'vertical'
-                size_hint_y: .3
-                pos_hint: {'center_x': .5}
-                padding: '20dp'
-                radius: dp(15)
-                line_color: app.theme_cls.primaryColor
 
-                MDDivider:
-
-                MDLabel:
-                    id: prepared
-                    text: '' 
-                    pos_hint: {'center_x': .5}
-                    bold: True
-            
-                MDLabel:
-                    id: on_road
-                    text: '' 
-                    pos_hint: {'center_x': .5}
-                    bold: True
+            MDDivider:
         
-                MDDivider:
-            MDBoxLayout:
-                orientation: 'vertical'
-                size_hint_y: .3
+            MDLabel:
+                id: on_road
+                text: '' 
+                pos_hint: {'center_x': .5}
+        ScrollView:
+            size_hint_y: .6
 
+            MDList:
+                id: container
 
 
         
@@ -183,6 +237,8 @@
 
     MDLabel:
         text: "Login"
+        color: self.theme_cls.primaryColor
+        theme_text_color: "Custom"
         bold: True
         font_style: "Title"
         halign: "center"
@@ -266,6 +322,7 @@
     
     MDLabel:
         text: 'Logout' 
+        theme_text_color: "Custom"
         pos_hint: {'center_x': .5,'center_y': .5}
         bold: True
         font_style: "Title"
@@ -289,7 +346,7 @@ MDBoxLayout:
         id: box_header
         theme_bg_color: "Custom"
         id: title_ap
-        md_bg_color: app.theme_cls.primaryColor
+        md_bg_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
 
         MDTopAppBarLeadingButtonContainer:
 
@@ -312,8 +369,6 @@ MDBoxLayout:
                 on_press: 
                     root.ids.screen_manager.login_out(btn_log, [home_btn, qr_btn, branch_btn])
                     root.ids.qr_screen.close_cam()
-
-    MDDivider:
  
     RmScreenManager:
         id: screen_manager
@@ -339,6 +394,8 @@ MDBoxLayout:
     MDNavigationBar:
         radius: dp(18)
         md_bg_color: app.theme_cls.secondaryContainerColor
+        line_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
+
 
         BaseMDNavigationItem
             id: home_btn
@@ -349,6 +406,7 @@ MDBoxLayout:
                 screen_manager.current= 'homescreen'
                 qr_screen.close_cam()
                 home_screen.count_routes()
+                home_screen.on_start()
                 
 
         BaseMDNavigationItem
