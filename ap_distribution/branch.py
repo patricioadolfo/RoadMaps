@@ -11,7 +11,7 @@ class BranchScreen(MDScreen):
         on_road= self.screen_manager.user.view_road('?c=c!'+ str(instance.ids['id']))
              
         self.branch_details.ids.branch_details_lb.text= instance.ids['name']
-
+        
         for item in prepared['results']:
             
             self.branch_details.ids.branch_details_p.add_widget(MDListItem(
@@ -29,6 +29,7 @@ class BranchScreen(MDScreen):
                                                         ),
                                                     )
                                               )
+
         
         for item in on_road['results']:
             
@@ -46,6 +47,8 @@ class BranchScreen(MDScreen):
                                                             icon="package-variant-minus",
                                                             ),
                                                         ))
+        
+
         
         self.screen_manager.current= 'branchdetailsscreen'
         
@@ -91,6 +94,8 @@ class BranchDetails(MDScreen):
         
         self.ids.branch_details_p.clear_widgets(self.ids.branch_details_p.children)
         
-        self.ids.branch_details_c.clear_widgets(self.ids.branch_details_p.children)
+        self.ids.branch_details_c.clear_widgets(self.ids.branch_details_c.children)
                         
+        self.ids.badge_count_ent.text= ''
         
+        self.ids.badge_count_ret.text= ''

@@ -1,105 +1,61 @@
 <RmScreenManager>
-<ExpansionPanelItem>
 
-    MDExpansionPanelHeader:
+<HomeSnack>
+    y: dp(14)
+    orientation: "horizontal"
+    pos_hint: {"center_x": .5, "center_y": .5}
+    size_hint_x: .5
 
-        MDListItem:
-            theme_bg_color: "Custom"
-            md_bg_color: self.theme_cls.surfaceContainerLowColor
-            ripple_effect: False
-
-            MDListItemSupportingText:
-                text: "Supporting text"
-
-            TrailingPressedIconButton:
-                id: chevron
-                icon: "chevron-right"
-                on_release: root.tap_expansion_chevron(root, chevron)
-
-    MDExpansionPanelContent:
-        orientation: "vertical"
-        padding: "12dp", 0, "12dp", "12dp"
-        md_bg_color: self.theme_cls.surfaceContainerLowestColor
-
-        MDLabel:
-            text: "Channel information"
-            adaptive_height: True
-            padding_x: "16dp"
-            padding_y: "12dp"
-
-        MDListItem:
-            theme_bg_color: "Custom"
-            md_bg_color: self.theme_cls.surfaceContainerLowestColor
-
-            MDListItemLeadingIcon:
-                icon: "email"
-
-            MDListItemHeadlineText:
-                text: "Email"
-
-            MDListItemSupportingText:
-                text: "kivydevelopment@gmail.com"
-
-        MDListItem:
-            theme_bg_color: "Custom"
-            md_bg_color: self.theme_cls.surfaceContainerLowestColor
-
-            MDListItemLeadingIcon:
-                icon: "instagram"
-
-            MDListItemHeadlineText:
-                text: "Instagram"
-
-            MDListItemSupportingText:
-                text: "Account"
-
-            MDListItemTertiaryText:
-                text: "www.instagram.com/KivyMD"
+    MDSnackbarSupportingText:
+        id: snack_text
+        pos_hint: {"center_x": .5}
 
 <ScanAnalyze>
 <HomeScreen>
     name: 'homescreen'
     
-    MDBoxLayout:
-        padding: '10dp'
-        orientation: 'vertical'
+    MDLabel:
+        size_hint_y: .2
+        id: text_home
+        pos_hint: {'center_x': .5,"center_y": .9}
+        bold: True
+        font_style: "Title"
+        halign: "center"
 
-        MDLabel:
-            size_hint_y: .2
-            id: text_home
-            text: '' 
-            pos_hint: {'center_x': .5, 'center_y':.9 }
-            bold: True
-            font_style: "Title"
-            halign: "center"
-
-        MDBoxLayout:
-            orientation: 'vertical'
-            size_hint_y: .2
-            pos_hint:  {'center_x': .5, 'center_y':.8 }
-            padding: '20dp'
-            radius: dp(15)
-            line_color: app.theme_cls.primaryColor
-
-            MDLabel:
-                id: prepared
-                text: '' 
-                pos_hint: {'center_x': .5}
-
-            MDDivider:
+    MDDivider:
+                
+    MDList:
+        id: container
         
-            MDLabel:
-                id: on_road
-                text: '' 
-                pos_hint: {'center_x': .5}
-        ScrollView:
-            size_hint_y: .6
+        MDListItem: 
+            
+            MDListItemSupportingText:
+                id: text_prepared
+            MDListItemTrailingIcon:
+                icon: 'package-variant-closed-plus'
+                MDBadge:
+                    id: badge_prep
 
-            MDList:
-                id: container
+        MDListItem: 
+            
+            MDListItemSupportingText:
+                id: text_onroad
+            MDListItemTrailingIcon:
+                icon: 'package-variant-closed-minus'
+                MDBadge:
+                    id: badge_onroad
 
 
-        
+    MDDivider:
+
+    MDLabel:
+        size_hint_y: .1 
+        id: text_time
+        pos_hint: {'center_x': .8,"center_y": .1}
+        bold: True
+        halign: "center"
+    
+
 
 
 
@@ -157,10 +113,14 @@
             MDDivider:
 
             MDTabsItem:
+
                 MDTabsItemText:
                     text: 'Retirar'
+
+
             
             MDTabsItem:
+                
                 MDTabsItemText:
                     text: 'Entregar'
             
@@ -405,9 +365,7 @@ MDBoxLayout:
             on_press: 
                 screen_manager.current= 'homescreen'
                 qr_screen.close_cam()
-                home_screen.count_routes()
-                home_screen.on_start()
-                
+                home_screen.count_routes()                
 
         BaseMDNavigationItem
             id: qr_btn

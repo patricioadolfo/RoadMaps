@@ -22,7 +22,9 @@ class LoginScreen(MDScreen):
             
             self.parent.parent.ids.branch_btn.disabled= False   
             
-            self.parent.parent.ids.home_btn.disabled= False           
+            self.parent.parent.ids.home_btn.disabled= False    
+            
+            self.parent.parent.ids.home_screen.count_routes() 
 
         except:
             

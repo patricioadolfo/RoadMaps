@@ -6,7 +6,7 @@ from kivymd.uix.screen import MDScreen
 from scan import QrScreen, QrDialog, ScanAnalyze
 from login import LoginScreen, LogOutScreen
 from branch import BranchScreen, BranchDetails
-from home import HomeScreen, ExpansionPanelItem
+from home import HomeScreen, HomeSnack
 import models   
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.utils.set_bars_colors import set_bars_colors
