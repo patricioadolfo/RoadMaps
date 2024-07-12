@@ -33,8 +33,8 @@
                 id: text_prepared
             MDListItemTrailingIcon:
                 icon: 'package-variant-closed-plus'
-                MDBadge:
-                    id: badge_prep
+                id: icon_prep
+
 
         MDListItem: 
             
@@ -42,8 +42,7 @@
                 id: text_onroad
             MDListItemTrailingIcon:
                 icon: 'package-variant-closed-minus'
-                MDBadge:
-                    id: badge_onroad
+                id: icon_onroad
 
 
     MDDivider:
@@ -277,16 +276,7 @@
                 root.manager.transition.direction = "up"
                 root.login(url, username, password)
 
-<LogOutScreen>
-    name: 'logoutscreen'
-    
-    MDLabel:
-        text: 'Logout' 
-        theme_text_color: "Custom"
-        pos_hint: {'center_x': .5,'center_y': .5}
-        bold: True
-        font_style: "Title"
-        halign: "center"
+
 
 <BaseMDNavigationItem>
 
@@ -336,9 +326,6 @@ MDBoxLayout:
         LoginScreen:
             id: login_screen
         
-        LogOutScreen:
-            id: logout_screen
-
         HomeScreen:
             id: home_screen
 

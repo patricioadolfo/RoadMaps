@@ -90,12 +90,9 @@ class BranchDetails(MDScreen):
     
     def back_branchsecreen(self, *args):
         
-        self.parent.current= 'branchscreen'
         
         self.ids.branch_details_p.clear_widgets(self.ids.branch_details_p.children)
         
         self.ids.branch_details_c.clear_widgets(self.ids.branch_details_c.children)
-                        
-        self.ids.badge_count_ent.text= ''
         
-        self.ids.badge_count_ret.text= ''
+        self.parent.current= 'branchscreen'

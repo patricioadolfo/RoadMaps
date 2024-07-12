@@ -4,7 +4,7 @@ from kivymd.app import MDApp
 from kivymd.uix.navigationbar import MDNavigationItem
 from kivymd.uix.screen import MDScreen
 from scan import QrScreen, QrDialog, ScanAnalyze
-from login import LoginScreen, LogOutScreen
+from login import LoginScreen
 from branch import BranchScreen, BranchDetails
 from home import HomeScreen, HomeSnack
 import models   
@@ -35,7 +35,7 @@ class RmScreenManager(MDScreenManager):
         else:
             self.user.logOut()
             
-            self.current= 'logoutscreen' 
+            self.current= 'loginscreen' 
             
             log.icon= 'account-circle-outline'
             

@@ -30,10 +30,7 @@ class LoginScreen(MDScreen):
             
             self.children[-1].text= 'Login Incorrecto'
         
-     
- 
-class LogOutScreen(MDScreen):
-    
-    pass
+
+
         
         
