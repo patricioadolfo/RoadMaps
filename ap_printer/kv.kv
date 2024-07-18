@@ -1,0 +1,21 @@
+<Check>
+    group: 'group'
+    on_active: app.on_checkbox_active(*args)
+
+MDScreen:
+
+    MDButton:
+        text: 'Impresoras'
+        on_press: 
+            app.list_printers()
+    
+    FitImage:
+
+        size_hint: .7, .7
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        source: 'qr_conect.png'
+
+    MDScrollView:
+
+        MDList:
+            id: mdlist

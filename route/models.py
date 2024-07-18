@@ -142,7 +142,7 @@ class RouteInstance(models.Model):
     
 class Perfil(models.Model):
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null= True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null= True,)
     
     nodo =  models.ForeignKey(NodeDestination, on_delete=models.CASCADE, null= True)
 

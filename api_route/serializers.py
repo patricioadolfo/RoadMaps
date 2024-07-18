@@ -42,3 +42,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username']
+        
+class PerfilSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = models.Perfil
+        fields = "__all__"

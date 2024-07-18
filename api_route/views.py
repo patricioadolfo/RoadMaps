@@ -1,4 +1,4 @@
-from .serializers import RouteSerializer, OriginSerializer, DestinationSerializer, instanceSerializer, UserSerializer
+from .serializers import RouteSerializer, OriginSerializer, DestinationSerializer, instanceSerializer, UserSerializer, PerfilSerializer
 from rest_framework import permissions, viewsets
 from route import models
 from django.contrib.auth.models import User 
@@ -56,7 +56,6 @@ class InstanceSerializerViewSet(viewsets.ModelViewSet):
     serializer_class = instanceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
 class OriginSerializerViewSet(viewsets.ModelViewSet):
 
     queryset = models.NodeOrigin.objects.all().order_by('id')
@@ -78,6 +77,27 @@ class UserSerializerViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self, *args, **kwargs):
         return User.objects.filter(username =self.request.user)
+    
+class PerfilSerializerViewSet(viewsets.ModelViewSet):
+    
+    queryset= models.Perfil.objects.all()
+    serializer_class= PerfilSerializer
+    permission_classes= [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        
+        if self.request.method == 'GET':
+            
+            query = self.request.GET.get('q', None)
+            
+            if query is not None:
+                
+                return models.Perfil.objects.filter(user= query)
+        
+            else:
+                queryset= models.Perfil.objects.all()
+                
+                return queryset
     
 
         
