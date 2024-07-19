@@ -2,8 +2,22 @@ from .serializers import RouteSerializer, OriginSerializer, DestinationSerialize
 from rest_framework import permissions, viewsets
 from route import models
 from django.contrib.auth.models import User 
+from django.db.models import Q
+import json
+#from myapp.models import User
+#user_dict = {'name': 'Charlie', 'age': 40}
+#q_objects = [Q(**{k: v}) for k, v in user_dict.items()]
+#queryset = User.objects.filter(*q_objects)
 
-class RouteSerializerViewSet(viewsets.ModelViewSet):
+class QueryDict():
+
+    def dict_query(self, dict):
+        
+        d= json.loads(dict)
+        
+        self.q_objects = [Q(**{k: v}) for k, v in d.items()]
+
+class RouteSerializerViewSet(viewsets.ModelViewSet, QueryDict):
 
     queryset = models.Route.objects.all().order_by('-preparation_date')
     serializer_class = RouteSerializer
@@ -13,63 +27,37 @@ class RouteSerializerViewSet(viewsets.ModelViewSet):
         
         if self.request.method == 'GET':
             
-            query_p = self.request.GET.get('p', None)
+            query = self.request.GET.get('q', None)
             
-            query_c = self.request.GET.get('c', None)
+            if query is not None:
             
-            if query_p is not None:
-                
-                state, origin_id= query_p.split('!')
-                
-                if origin_id == 'all':
-                    
-                    return models.Route.objects.filter(status= state)
-                
-                else:
-                
-                    return models.Route.objects.filter(status= state).filter(origin= origin_id)
+                self.dict_query(query)
             
-            elif query_c is not None:
-                
-                state, destination_id= query_c.split('!')
-                
-                if destination_id == 'all':
-                    
-                    return models.Route.objects.filter(status= state)
-                
-                else:
-                
-                    return models.Route.objects.filter(status= state).filter(destination= destination_id)
-            
-            
+                return models.Route.objects.filter(*self.q_objects)
+        
             else:
-                queryset = models.Route.objects.all().order_by('-preparation_date')
-                return queryset
+                return models.Route.objects.all().order_by('-preparation_date')
 
-        else:
-            queryset = models.Route.objects.all().order_by('-preparation_date')
-            return queryset
-
-class InstanceSerializerViewSet(viewsets.ModelViewSet):
+class InstanceSerializerViewSet(viewsets.ModelViewSet, QueryDict):
 
     queryset = models.RouteInstance.objects.all().order_by('route')
     serializer_class = instanceSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-class OriginSerializerViewSet(viewsets.ModelViewSet):
+    
+class OriginSerializerViewSet(viewsets.ModelViewSet, QueryDict):
 
     queryset = models.NodeOrigin.objects.all().order_by('id')
     serializer_class = OriginSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-class DestinationSerializerViewSet(viewsets.ModelViewSet):
+class DestinationSerializerViewSet(viewsets.ModelViewSet, QueryDict):
 
     queryset = models.NodeDestination.objects.all().order_by('name')
     serializer_class = DestinationSerializer
 
     permission_classes =[permissions.IsAuthenticated]
     
-class UserSerializerViewSet(viewsets.ModelViewSet):
+class UserSerializerViewSet(viewsets.ModelViewSet, QueryDict):
     
     queryset= User.objects.all()
     serializer_class= UserSerializer 
@@ -78,7 +66,7 @@ class UserSerializerViewSet(viewsets.ModelViewSet):
     def get_queryset(self, *args, **kwargs):
         return User.objects.filter(username =self.request.user)
     
-class PerfilSerializerViewSet(viewsets.ModelViewSet):
+class PerfilSerializerViewSet(viewsets.ModelViewSet, QueryDict):
     
     queryset= models.Perfil.objects.all()
     serializer_class= PerfilSerializer
@@ -91,14 +79,13 @@ class PerfilSerializerViewSet(viewsets.ModelViewSet):
             query = self.request.GET.get('q', None)
             
             if query is not None:
-                
-                return models.Perfil.objects.filter(user= query)
+            
+                self.dict_query(query)
+            
+                return models.Perfil.objects.filter(*self.q_objects)
         
             else:
-                queryset= models.Perfil.objects.all()
-                
-                return queryset
-    
+                return models.Perfil.objects.all()
 
         
    

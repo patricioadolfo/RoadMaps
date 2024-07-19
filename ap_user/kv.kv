@@ -375,9 +375,10 @@ MDBoxLayout:
             text: "Pedidos"
             disabled: True
             on_press: 
-                qr_screen.close_cam()
-                orders_screen.order_list(screen_manager, branch_details)
                 screen_manager.current= 'ordersscreen'
+                qr_screen.close_cam()
+                orders_screen.order_list(branch_details)
+                
               
             
 

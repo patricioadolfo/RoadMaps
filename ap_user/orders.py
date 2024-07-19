@@ -1,6 +1,6 @@
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.list import MDListItem, MDListItemLeadingIcon, MDListItemHeadlineText, MDListItemSupportingText, MDListItemTertiaryText, MDListItemTrailingIcon
-
+from kivymd.uix.badge import MDBadge
 
 class OrdersScreen(MDScreen):
     
@@ -52,38 +52,60 @@ class OrdersScreen(MDScreen):
         
         self.screen_manager.current= 'branchdetailsscreen'
         
-    def order_list(self, screen_manager, branch_details):
+    def order_list(self, branch_details):
         
         self.branch_details= branch_details
         
-        self.screen_manager= screen_manager
-
         self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
         
-        if screen_manager.user.id_user != {}:
-        
-            nodes= screen_manager.user.nodes_origin
+        if self.parent.user.id_user != {}:
             
-            for node in nodes:
+            receiver= self.parent.user.view_road('?d=c!'+ str(self.parent.user.perfil))
+        
+            nodes= self.parent.user.nodes_origin
+            
+            if receiver['count'] != 0:
+                text_headeer= 'Tienes '+ str(receiver['count']) + ' pedidos para recibir'
+            else:
+                text_headeer= 'No tienes pedidos a recibir'
+            
+            self.ids.mdlist.add_widget(
+                MDListItem(
+                    MDListItemHeadlineText(
+                        text= text_headeer
+                        ), 
+                    MDListItemTrailingIcon(
+                        MDBadge(
+                          text= str(receiver['count'])  
+                        ),
+                        icon= 'information-variant',
+                    )
+                )
+            )
+            
+            for order in receiver['results']:
+                
+                if order['status'] == 'p':
+                    status= 'Preprado'
+                else:
+                    status= 'En camino' 
+                
                 self.ids.mdlist.add_widget(MDListItem(
-                    MDListItemLeadingIcon(
-                        icon='map-marker-radius-outline',
-                            ),
-                            MDListItemHeadlineText(
-                                text= node['name'],
-                            ),
-                            MDListItemSupportingText(
-                                text= node['address'],
-                            ),
-                            MDListItemTertiaryText(
-                                text= node['phoneNumber'],
-                            ),
-                            MDListItemTrailingIcon(
-                                icon="view-sequential-outline",
-                            ),
-                            ids= node,
-                            on_press= self.node_details
-                        ))
+                                                MDListItemLeadingIcon(
+                                                    icon='package-variant-plus',
+                                                        ),
+                                                MDListItemSupportingText(
+                                                    text= '## '+ str(order['id']),
+                                                ),
+                                                MDListItemTertiaryText(
+                                                    text= 'De '+ order['origin_name'] + '   Estdo: '+ status
+                                                ),
+                                                MDListItemTrailingIcon(
+                                                    icon="view-sequential-outline",
+                                                ),
+                                                ids= order,
+                                               # on_press= self.node_details
+                                            ))
 
                 
 class BranchDetails(MDScreen):
