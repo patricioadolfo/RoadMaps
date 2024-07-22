@@ -10,8 +10,91 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.button import MDButton, MDButtonIcon, MDButtonText
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.list import MDListItem, MDListItemLeadingIcon, MDListItemHeadlineText, MDListItemSupportingText, MDListItemTertiaryText, MDListItemTrailingCheckbox
 
 
+class Check(MDListItemTrailingCheckbox):
+    pass
+
+class QrPrinter(MDScreen):
+    
+    
+    def print_order(self, instance, *args):
+        
+        try:
+            self.parent.user.conect()
+            
+            self.parent.user.send(instance.ids)
+            
+            self.parent.user.disconnect()
+            
+        except:
+            pass
+
+    
+    def order_item(self, order, list):
+           
+        item= MDListItem(
+                        MDListItemLeadingIcon(
+                            icon='package-variant-plus',
+                                ),
+                        MDListItemSupportingText(
+                            text= '## '+ str(order['id']),
+                        ),
+                        MDListItemTertiaryText(
+                            text= 'De '+ order['origin_name'] + ', preparado el '+ order['preparation_date']
+                        ),
+                        ids= order,
+                        on_press= self.print_order
+                    )
+        list.add_widget(item)
+    
+    def list_orders(self,):
+        
+        self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
+        
+        if self.parent.user.id_user != {}:
+            
+            prepared= self.parent.user.view_road('?q='+ str({"status":"p", "origin": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
+
+            for order in prepared['results']:
+
+                self.order_item(order, self.ids.mdlist)
+               
+    def conect_printer(self,):
+        
+        try:
+            self.parent.user.conect()
+            
+            self.parent.user.send({'password':''})
+            
+            self.parent.user.disconnect()
+        
+        except:
+            pass
+
+            
+    def list_printers(self,):
+        
+        self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
+        
+        for printer in self.parent.user.printers:
+    
+            self.ids.mdlist.add_widget(MDListItem(
+                                                MDListItemLeadingIcon(  
+                                                    icon= 'printer'),
+                                                MDListItemHeadlineText(
+                                                    text= str(printer[0]),
+                                                    ),
+                                                MDListItemSupportingText(
+                                                    text= printer[1],
+                                                    ),
+                                                MDListItemTertiaryText(
+                                                    text= printer[2],
+                                                    ),
+                                                Check(
+                                                    ),
+                                                ))
 
 class QrDialog(MDDialog):
                 
@@ -69,7 +152,6 @@ class QrDialog(MDDialog):
         
         self.close_card()
         
-
 class ScanAnalyze(Preview):
     
     extracted_data=ObjectProperty(None)
@@ -126,35 +208,31 @@ class QrScreen(MDScreen):
         except:
             print("fsdf")
      
-    def print_data(self,):
+    def check_printer(self,):
         
         passwd, ip, port= self.text_qr.split('|')
         
-        self.parent.user.conect(ip, port)
+        self.parent.user.ip= ip
         
-        self.parent.user.send(passwd) 
+        self.parent.user.port= port
         
-        self.parent.user.send('Hola') 
+        self.parent.user.passwd= passwd
         
-        self.parent.user.send('123456')
-        
-        self.parent.user.disconnect()
-            
     @mainthread
     def got_result(self, result):
         
         if self.text_qr != result.data.decode('utf-8'):
             
             self.text_qr = result.data.decode('utf-8')
-            print(self.text_qr)
             
             if '|' in self.text_qr:
                 
-                self.print_data()
+                self.check_printer()
+                
+                self.parent.current= 'qrprinter'
+                
+                
                 
             else:
 
                 self.qr_result()
-
-
-        

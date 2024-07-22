@@ -2,7 +2,7 @@ import requests
 from datetime import datetime
 import time
 import socket
-
+import json
 """
 http://127.0.0.1:8000/api/api-route/?q=c filtro en camino
 http://127.0.0.1:8000/api/api-route/?q=p filtro preparado
@@ -13,18 +13,50 @@ http://192.168.0.5:8080/api/api-route/?q=p!5 filtro estado preparado, origen 5
 
 class Client():
     
-    def conect(self, ip, port):
+    msj= {}
+    
+    ip= ''
+    
+    port= 0
+    
+    passwd= ''
+    
+    printer= ''
+    
+    def conect(self,):
                 
-        port = int(port)
+        self.port = int(self.port)
         
         self.client_p= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
-        self.client_p.connect((ip, port))
+        self.client_p.connect((self.ip, self.port))
+        
+        data = self.client_p.recv(2048).decode()
+           
+        self.printers= json.loads(data)
 
-    def send(self, msj):
+    def send(self, data):
         
+        try:
+            text= """ 
+            De: {origen}
+            Para: {destino}
+            Preprado el: {date} , {time}
+            """.format(origen= data['origin_name'],
+                    destino= data['destination_name'], 
+                    date= data['preparation_date'], 
+                    time= data['preparation_time'] )
+        
+            msj= {'password': self.passwd, 'id': data['id'], 'text': text, 'printer': self.printer}
+            
+        except:
+           msj= {'password': '', 'id': '', 'text': '', 'printer': ''}
+            
+        
+        msj= json.dumps(msj)
+            
         self.client_p.send(msj.encode())
-        
+          
     def disconnect(self,):
         
         self.client_p.close()
@@ -70,9 +102,9 @@ class Route:
             
             payload['next']= ''
             
-            self.client.post(self.url, data= payload, headers=dict(Referer= self.url))
+            post= self.client.post(self.url, data= payload, headers=dict(Referer= self.url))
         
-
+            return post.status_code
 
 class User(Route, Client):
     
@@ -80,9 +112,9 @@ class User(Route, Client):
         
         self.id_user= {}
     
-    def view_nodes(self,):
+    def view_nodes(self, url):
         
-        self.url= self.url_origin
+        self.url= url
         
         get= self.get_url('')
         
@@ -100,7 +132,9 @@ class User(Route, Client):
 
         self.url_id_user= url + '/api/api-user/'
 
-        self.url_origin= url + '/api/api-origin/'    
+        self.url_origin= url + '/api/api-origin/'
+        
+        self.url_destin= url + '/api/api-destination/'    
    
         self.url_login= url + '/api-auth/login/'
         
@@ -122,11 +156,13 @@ class User(Route, Client):
         
             self.id_user= id.json()['results'][0]         
 
-            self.nodes_origin= self.view_nodes()
+            self.nodes_origin= self.view_nodes(self.url_origin)
+            
+            self.nodes_destin= self.view_nodes(self.url_destin)
             
             self.url= self.url_perfil
-            
-            perfil = self.get_url(id= '?q='+ str(self.id_user['id']))
+
+            perfil = self.get_url('?q='+ str({"user": self.id_user['id']}).replace("'",'"').replace(' ',''))
             
             self.perfil= perfil['results'][0]['nodo']
                           
@@ -187,4 +223,20 @@ class User(Route, Client):
         
         return route
         
+    def route_create(self, detail, branch):
         
+        self.url= self.url_route
+        
+        payload= { 
+                    "description": detail,
+                    "preparation_date": datetime.today().strftime("%Y-%m-%d"),
+                    "preparation_time":  time.strftime("%H:%M:%S", time.localtime()),
+                    "status": "p",
+                    "user": self.id_user['id'],
+                    "origin": self.perfil,
+                    "destination": branch['id']
+                  }        
+        
+        post= self.post_url(payload)
+        
+        return post

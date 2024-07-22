@@ -5,6 +5,7 @@ import win32print
 import segno 
 import win32con
 import win32ui 
+import json
 
 
 
@@ -120,8 +121,9 @@ class SrvPrinter(Conexion, Qr, Printer):
         
         client_c.connect((self.HOST, self.PORT))
         
+        client_c.recv(1024).decode()
+        
         client_c.send(''.encode())
-
     
     def receive(self,):
         
@@ -133,21 +135,25 @@ class SrvPrinter(Conexion, Qr, Printer):
 
             self.client, self.address = self.server.accept()
             
-            print(self.client)
+            printers = self.get_printers()
             
-            password = self.client.recv(1024).decode("utf-8")
+            msj= json.dumps(printers)
+        
+            self.client.send(msj.encode())
             
-            if password == str(self.password_new):
+            data = self.client.recv(2048).decode()
+           
+            data= json.loads(data)
+            
+            print(data)
+            
+            if data['password'] == str(self.password_new):
                 
-                data= self.client.recv(1024).decode('utf-8')    
+                self.set_printers(data['printer'])
+                                
+                self.qr_save(data['id'], 'qr_id.png') 
                 
-                id= self.client.recv(1024).decode('utf-8')     
-                
-                print(data, id)       
-                
-                self.qr_save(id, 'qr_id.png') 
-                
-                self.print_text(data)
+                self.print_text(data['text'])
                 
                 self.print_qr()
                 

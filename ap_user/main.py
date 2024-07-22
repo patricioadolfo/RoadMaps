@@ -3,10 +3,10 @@ from kivy.properties import StringProperty
 from kivymd.app import MDApp
 from kivymd.uix.navigationbar import MDNavigationItem
 from kivymd.uix.screen import MDScreen
-from scan import QrScreen, QrDialog, ScanAnalyze
+from scan import QrScreen, QrDialog, ScanAnalyze, QrPrinter, Check
 from login import LoginScreen
-from orders import OrdersScreen, BranchDetails
-from home import HomeScreen, HomeSnack
+from orders import OrdersScreen, OrderCreate, OrderSnack
+from home import HomeScreen, HomeSnack  
 import models   
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.utils.set_bars_colors import set_bars_colors
@@ -14,7 +14,7 @@ from kivymd.utils.set_bars_colors import set_bars_colors
 
 
 #from android.permissions import request_permissions, Permission
-
+    
 #request_permissions([Permission.CAMERA, Permission.INTERNET])
 
 
@@ -46,11 +46,18 @@ class RmScreenManager(MDScreenManager):
     user= models.User()
 
 class RoadMapsApp(MDApp):
-               
+    
+    def on_checkbox_active(self, checkbox, value):
+        
+        if value:
+            
+            print(checkbox.parent.parent.children[1].children[0].children[0].text)     
+            
+            self.root.ids.screen_manager.user.printer= checkbox.parent.parent.children[1].children[0].children[0].text    
     
     def build(self):
 
-        self.theme_cls.primary_palette = "Blue"
+        self.theme_cls.primary_palette = "Aliceblue"
         
         self.set_bars_colors()
        

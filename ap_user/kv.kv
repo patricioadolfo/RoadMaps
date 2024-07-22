@@ -1,5 +1,65 @@
 <RmScreenManager>
 
+<Check>
+    group: 'group'
+    on_active: app.on_checkbox_active(*args)
+
+<QrPrinter>
+    name: 'qrprinter'
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDBoxLayout:
+            orientation: 'horizontal'
+            padding:10
+            size_hint_y: .1
+            MDIconButton:
+                icon: 'keyboard-backspace' 
+                pos_hint: {'center_x': .1, 'center_y': .5}
+                on_press: 
+                    root.parent.current= 'qrscreen'
+            MDLabel:
+                text: 'Imprimir' 
+                halign: 'center'
+                font_style: "Title"
+                color: app.theme_cls.primaryColor
+                bold: True       
+                pos_hint: {'center_x': .5, 'center_y': .5}
+
+        MDDivider:
+
+        MDBoxLayout:
+            orientation: 'horizontal'
+            padding:20
+            size_hint_y: .9
+            MDBoxLayout:
+                size_hint_x: .2
+                orientation: 'vertical'
+                MDButton:
+                    text: 'conect'
+                    on_press: 
+                        root.conect_printer()
+                        root.list_printers()
+                MDButton:
+                    text: 'Listado'
+                    on_press: 
+                        root.list_orders()
+            
+            MDScrollView:
+                size_hint_x: .8
+                MDList:
+                    id: mdlist
+            
+<OrderSnack>
+    y: dp(14)
+    orientation: "horizontal"
+    pos_hint: {"center_x": .5, "center_y": .5}
+    size_hint_x: .5
+
+    MDSnackbarSupportingText:
+        id: order_snack_text
+
+        pos_hint: {"center_x": .5}
+
 <HomeSnack>
     y: dp(14)
     orientation: "horizontal"
@@ -82,67 +142,90 @@
                             
                             
 
-<BranchDetails>
-    name: 'branchdetailsscreen'
+<OrderCreate>
+    name: 'ordercreatescreen'
     MDBoxLayout:
         orientation: 'vertical'
         MDBoxLayout:
             orientation: 'horizontal'
-            pos_hint: {'center_x': .5, 'center_y': 1}
+
             padding:10
             size_hint_y: .1
             MDIconButton:
                 icon: 'keyboard-backspace' 
                 pos_hint: {'center_x': .1, 'center_y': .5}
-                on_press: root.back_branchsecreen()
+                on_press: 
+                    root.parent.current= 'ordersscreen'
             MDLabel:
-                id: branch_details_lb
-                text: '' 
+                text: 'Nuevo envio' 
                 halign: 'center'
                 font_style: "Title"
                 color: app.theme_cls.primaryColor
                 bold: True       
                 pos_hint: {'center_x': .5, 'center_y': .5}
 
-        MDTabsSecondary:
-            id: tabs
-            pos_hint: {"center_x": .5, "center_y": .9}
-            size_hint_y: .9
-
-            MDDivider:
-
-            MDTabsItem:
-
-                MDTabsItemText:
-                    text: 'Retirar'
-
-
-            
-            MDTabsItem:
-                
-                MDTabsItemText:
-                    text: 'Entregar'
-            
-            MDTabsCarousel:
-                size_hint_y: None
-                size_hint_y: .8
-                
-                MDScrollView:
-                    MDList:
-                        id: branch_details_p
-
-                MDScrollView:
-                    MDList:
-                        id: branch_details_c
+        MDDivider:
         
+        MDBoxLayout:
+            orientation: 'horizontal'
+            padding:20
+            size_hint_y: .5
+
+            MDDropDownItem:
+                on_release: root.open_menu(self)
+                size_hint_x: .2
+                pos_hint: {'center_x': .1, 'center_y': .5}
+                
+                MDDropDownItemText:
+                    id: drop_text
+                    text: 'Destino'
+
+            MDTextField:
+                id: text_detail
+                mode: "filled"
+                max_height: "200dp"
+                multiline: True
+                size_hint_x: .8
+                pos_hint: {'center_x': .5, 'center_y': .5 }
+                MDTextFieldHelperText:
+                    text: "Detalle"
+                    mode: "persistent"
+
+        MDDivider:
+
+        MDBoxLayout:
+            orientation: 'horizontal'
+            padding:20
+            size_hint_y: .4
+
+            MDFabButton:
+                style:'standard' 
+                icon:"plus" 
+                color_map: 'surface'
+                pos_hint: {"center_x": .5, 'center_y': .5}
+                line_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
+                on_press: root.create_order()
+
 
 <OrdersScreen>
     name: 'ordersscreen'
 
     MDScrollView:
+        do_scroll_x: False
 
         MDList:
             id: mdlist
+    
+    MDFabButton:
+        style:'standard' 
+        icon:"plus" 
+        color_map: 'surface'
+        pos_hint: {"center_x": .9, 'center_y': .1}
+        line_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
+        on_press: 
+            root.parent.current= 'ordercreatescreen'
+
+
 
 <QrDialog>    
 
@@ -322,7 +405,7 @@ MDBoxLayout:
                 icon: "account-circle-outline"
                 id: btn_log
                 on_press: 
-                    root.ids.screen_manager.login_out(btn_log, [home_btn, qr_btn, branch_btn])
+                    root.ids.screen_manager.login_out(btn_log, [home_btn, qr_btn, order_btn])
                     root.ids.qr_screen.close_cam()
  
     RmScreenManager:
@@ -340,8 +423,11 @@ MDBoxLayout:
         OrdersScreen:
             id: orders_screen
 
-        BranchDetails:
-            id: branch_details
+        OrderCreate:
+            id: order_create
+        
+        QrPrinter:
+            id: qr_printer
 
     MDNavigationBar:
         radius: 18, 18, 0, 0
@@ -377,7 +463,7 @@ MDBoxLayout:
             on_press: 
                 screen_manager.current= 'ordersscreen'
                 qr_screen.close_cam()
-                orders_screen.order_list(branch_details)
+                orders_screen.order_list()
                 
               
             
