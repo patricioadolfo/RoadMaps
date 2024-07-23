@@ -17,8 +17,7 @@ class Check(MDListItemTrailingCheckbox):
     pass
 
 class QrPrinter(MDScreen):
-    
-    
+       
     def print_order(self, instance, *args):
         
         try:
@@ -30,7 +29,6 @@ class QrPrinter(MDScreen):
             
         except:
             pass
-
     
     def order_item(self, order, list):
            
@@ -72,7 +70,6 @@ class QrPrinter(MDScreen):
         
         except:
             pass
-
             
     def list_printers(self,):
         
@@ -122,7 +119,7 @@ class QrDialog(MDDialog):
         
         if 'status' in dict:
         
-            if dict['status'] == 'p':
+            if dict['status'] == 'c':
                 
                 self.ids.btn_rec.disabled= False
                 
@@ -132,8 +129,8 @@ class QrDialog(MDDialog):
                     time= dict['preparation_time'],
                 ) 
             
-            elif dict['status'] == 'c':
-                detail_text= 'Envio n° {id} en camino'.format(id= str(dict['id']))
+            elif dict['status'] == 'p':
+                detail_text= 'Envio n° {id} preparado'.format(id= str(dict['id']))
             
             else:
                 detail_text= 'Envio n° {id} recibido'.format(id= str(dict['id']))
@@ -228,6 +225,8 @@ class QrScreen(MDScreen):
             if '|' in self.text_qr:
                 
                 self.check_printer()
+                
+                self.close_cam()
                 
                 self.parent.current= 'qrprinter'
                 

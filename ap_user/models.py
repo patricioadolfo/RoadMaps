@@ -80,7 +80,7 @@ class Route:
            
     def patch_url(self, id, payload):
         
-        self.url= self.url +  id +'/'
+        self.url= self.url +  id + '/'
         
         self.client.get(self.url)   
 
@@ -88,8 +88,8 @@ class Route:
             
             csrftoken = self.client.cookies['csrftoken']
         
-            self.client.patch(self.url, data= payload, headers={'X-CSRFTOKEN': csrftoken})
-                        
+            p= self.client.patch(self.url, data= payload, headers={'X-CSRFTOKEN': csrftoken})
+          
     def post_url(self, payload):
         
         self.client.get(self.url) 
@@ -180,13 +180,13 @@ class User(Route, Client):
         
         self.url= self.url_route
      
-        payload= {"status":"c"}
+        payload= {"status":"r"}
     
         patch= self.patch_url(id_route, payload)
         
         payload={
             "route_id": id_route,
-            "status": 'c',
+            "status": 'r',
             "instance_date":  datetime.today().strftime("%Y-%m-%d"),
             "instance_time": time.strftime("%H:%M:%S", time.localtime()),
             "user": self.id_user['id'],

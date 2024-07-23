@@ -37,6 +37,9 @@ class RouteSerializerViewSet(viewsets.ModelViewSet, QueryDict):
         
             else:
                 return models.Route.objects.all().order_by('-preparation_date')
+        
+        else:
+            return models.Route.objects.all().order_by('-preparation_date')
 
 class InstanceSerializerViewSet(viewsets.ModelViewSet, QueryDict):
 
