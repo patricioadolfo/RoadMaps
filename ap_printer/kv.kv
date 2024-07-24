@@ -1,21 +1,15 @@
-<Check>
-    group: 'group'
-    on_active: app.on_checkbox_active(*args)
 
 MDScreen:
 
-    MDButton:
-        text: 'Impresoras'
-        on_press: 
-            app.list_printers()
-    
-    FitImage:
+    MDBoxLayout:
 
-        size_hint: .7, .7
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        source: 'qr_conect.png'
+        pos_hint: {"center_x": .5, "center_y": .5}
+        size_hint: .5, .6
+        md_bg_color: self.theme_cls.onSurfaceVariantColor
 
-    MDScrollView:
+        FitImage:
+            source: 'qr_conect.png'
+            #size_hint: .5, .5
+            pos_hint:{"center_x": .5, "center_y": .5}
 
-        MDList:
-            id: mdlist
+

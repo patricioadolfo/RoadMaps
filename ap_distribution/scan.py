@@ -75,7 +75,7 @@ class ScanAnalyze(Preview):
     
     def analyze_pixels_callback(self, pixels, image_size, image_pos, scale, mirror):
         
-        pimage=Image.frombytes(mode='RGBA',size=image_size,data=pixels)
+        pimage=Image.frombytes(mode='RGBA', size=image_size, data=pixels)
         
         list_of_all_barcodes=decode(pimage)
         

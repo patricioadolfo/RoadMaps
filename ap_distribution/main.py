@@ -10,6 +10,7 @@ from home import HomeScreen, HomeSnack
 import models   
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.utils.set_bars_colors import set_bars_colors
+from kivy.storage.jsonstore import JsonStore
 
 
 
@@ -46,20 +47,42 @@ class RmScreenManager(MDScreenManager):
     user= models.User()
 
 class RoadMapsApp(MDApp):
-               
+    
+    icon= 'truck.png'       
+    
+    store = JsonStore('load.json')
+    
+    
+    def load_log(self,):
+        
+        try:
+        
+            self.user = self.store.get('log')['name']   
+            
+            self.passwd= self.store.get('log')['pswd']
+            
+            self.ip= self.store.get('log')['ip']
+        
+        except:
+            
+            self.user = ''   
+            
+            self.passwd= ''
+            
+            self.ip= ''
     
     def build(self):
 
-        self.theme_cls.primary_palette = "Blue"
+        self.theme_cls.primary_palette = "Aliceblue"
         
         self.set_bars_colors()
        
         self.theme_cls.theme_style = "Dark"    
-        
-        print(self.theme_cls.primaryColor)
  
         self.theme_cls.primary_hue = "A700"
-           
+        
+        self.load_log()
+
         return Builder.load_file('kv.kv')
     
     def switch_theme_style(self):

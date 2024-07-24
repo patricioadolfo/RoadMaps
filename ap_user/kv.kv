@@ -302,6 +302,7 @@
     
     MDTextField:
         id: username
+        text: app.user
         mode: 'filled'
         size_hint_x: .7
         pos_hint: {'center_x': .5, 'center_y': .8}
@@ -314,6 +315,7 @@
 
     MDTextField:
         id: password
+        text: app.passwd
         mode: 'filled'
         password: True
         size_hint_x: .7
@@ -358,6 +360,7 @@
 
         MDTextField:
             id: url
+            text: app.ip
             mode: 'filled'
             size_hint_x: .95
             write_tab: False
@@ -442,7 +445,7 @@ MDBoxLayout:
             id: qr_printer
 
     MDNavigationBar:
-        radius: 24, 24, 0, 0
+        radius: 30, 30, 0, 0
 
         md_bg_color: app.theme_cls.secondaryContainerColor
         line_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
@@ -469,7 +472,7 @@ MDBoxLayout:
 
         BaseMDNavigationItem
             id: order_btn
-            icon: "map-marker-radius-outline"
+            icon: "package-variant-closed"
             text: "Pedidos"
             disabled: True
             on_press: 

@@ -128,10 +128,12 @@
                 size_hint_y: .8
                 
                 MDScrollView:
+                    do_scroll_x: False
                     MDList:
                         id: branch_details_p
 
                 MDScrollView:
+                    do_scroll_x: False
                     MDList:
                         id: branch_details_c
         
@@ -139,6 +141,7 @@
 <BranchScreen>
     name: 'branchscreen'
     MDScrollView:
+        do_scroll_x: False
 
         MDList:
             id: mdlist
@@ -194,6 +197,7 @@
 <LoginScreen>
     name: 'loginscreen'
 
+
     MDLabel:
         text: "Login"
         color: self.theme_cls.primaryColor
@@ -205,6 +209,7 @@
     
     MDTextField:
         id: username
+        text: app.user
         mode: 'filled'
         size_hint_x: .7
         pos_hint: {'center_x': .5, 'center_y': .8}
@@ -217,6 +222,7 @@
 
     MDTextField:
         id: password
+        text: app.passwd
         mode: 'filled'
         password: True
         size_hint_x: .7
@@ -261,6 +267,7 @@
 
         MDTextField:
             id: url
+            text: app.ip
             mode: 'filled'
             size_hint_x: .95
             write_tab: False
@@ -342,7 +349,7 @@ MDBoxLayout:
             id: branch_details
 
     MDNavigationBar:
-        radius: dp(18)
+        radius: 30, 30, 0, 0
         md_bg_color: app.theme_cls.secondaryContainerColor
         line_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
 

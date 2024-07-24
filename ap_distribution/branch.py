@@ -6,9 +6,10 @@ class BranchScreen(MDScreen):
     
     def node_details(self, instance, *args):
 
-        prepared= self.screen_manager.user.view_road('?p=p!'+ str(instance.ids['id']))
+        prepared= self.screen_manager.user.view_road('?q='+ str({"status":"p", "origin": instance.ids['id']}).replace("'",'"').replace(' ',''))
+                                                    
         
-        on_road= self.screen_manager.user.view_road('?c=c!'+ str(instance.ids['id']))
+        on_road= self.screen_manager.user.view_road('?q='+ str({"status":"c", "destination": instance.ids['id']}).replace("'",'"').replace(' ',''))
              
         self.branch_details.ids.branch_details_lb.text= instance.ids['name']
         

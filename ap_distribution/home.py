@@ -20,7 +20,7 @@ class HomeScreen(MDScreen):
 
         snack.open()
         
-        prepared= self.parent.user.view_road('?p=p!all')
+        prepared= self.parent.user.view_road('?q='+ str({"status":"p"}).replace("'",'"').replace(' ',''))
         
         badge= MDBadge()
         
@@ -43,7 +43,7 @@ class HomeScreen(MDScreen):
             self.ids.text_prepared.text='No tienes pedidos preparados para retirar' 
 
         
-        on_road= self.parent.user.view_road('?c=c!all')
+        on_road= self.parent.user.view_road('?q='+ str({"status":"c"}).replace("'",'"').replace(' ',''))
         
         badge_p= MDBadge()
         

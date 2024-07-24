@@ -10,7 +10,7 @@ from home import HomeScreen, HomeSnack
 import models   
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.utils.set_bars_colors import set_bars_colors
-
+from kivy.storage.jsonstore import JsonStore
 
 
 #from android.permissions import request_permissions, Permission
@@ -47,6 +47,29 @@ class RmScreenManager(MDScreenManager):
 
 class RoadMapsApp(MDApp):
     
+    icon= 'truck.png'
+    
+    store = JsonStore('load.json')
+    
+    
+    def load_log(self,):
+        
+        try:
+        
+            self.user = self.store.get('log')['name']   
+            
+            self.passwd= self.store.get('log')['pswd']
+            
+            self.ip= self.store.get('log')['ip']
+        
+        except:
+            
+            self.user = ''   
+            
+            self.passwd= ''
+            
+            self.ip= ''
+    
     def on_checkbox_active(self, checkbox, value):
         
         if value:
@@ -63,7 +86,7 @@ class RoadMapsApp(MDApp):
        
         self.theme_cls.theme_style = "Dark"    
         
-        print(self.theme_cls.primaryColor)
+        self.load_log()
  
         self.theme_cls.primary_hue = "A700"
            
@@ -90,6 +113,4 @@ class RoadMapsApp(MDApp):
             "Dark",      # icons color of status bar
         )
     
-
-
 RoadMapsApp().run()

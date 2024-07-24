@@ -95,7 +95,7 @@ class Qr():
 
         self.qr= segno.make_qr(qr)
         
-        self.qr.save( name , scale=5 )
+        self.qr.save( name , scale=3 )
 
 class Conexion():
 

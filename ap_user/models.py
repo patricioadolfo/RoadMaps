@@ -39,13 +39,12 @@ class Client():
         
         try:
             text= """ 
-            De: {origen}
-            Para: {destino}
-            Preprado el: {date} , {time}
-            """.format(origen= data['origin_name'],
-                    destino= data['destination_name'], 
-                    date= data['preparation_date'], 
-                    time= data['preparation_time'] )
+De: {origen}
+Para: {destino}
+Preprado el: {date} , {time}""".format(origen= data['origin_name'],
+                                        destino= data['destination_name'], 
+                                        date= data['preparation_date'], 
+                                        time= data['preparation_time'] )
         
             msj= {'password': self.passwd, 'id': data['id'], 'text': text, 'printer': self.printer}
             

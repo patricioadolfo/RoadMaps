@@ -1,8 +1,11 @@
 from kivymd.uix.screen import MDScreen
-
+from kivy.storage.jsonstore import JsonStore
 
 class LoginScreen(MDScreen):
     
+    store = JsonStore('load.json')
+
+        
     def login(self,url, username, password):
                
         try:
@@ -25,12 +28,16 @@ class LoginScreen(MDScreen):
             self.parent.parent.ids.home_btn.disabled= False    
             
             self.parent.parent.ids.home_screen.count_routes() 
+            
+            self.save_log(username, password, url)
 
         except:
             
             self.children[-1].text= 'Login Incorrecto'
-        
+   
+   
+    def save_log(self, username, password, url):
 
-
+        self.store.put('log', name= username, pswd= password, ip= url)
         
         
