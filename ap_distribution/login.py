@@ -4,7 +4,6 @@ from kivy.storage.jsonstore import JsonStore
 class LoginScreen(MDScreen):
     
     store = JsonStore('load.json')
-
         
     def login(self,url, username, password):
                
@@ -34,10 +33,14 @@ class LoginScreen(MDScreen):
         except:
             
             self.children[-1].text= 'Login Incorrecto'
-   
-   
+      
     def save_log(self, username, password, url):
-
-        self.store.put('log', name= username, pswd= password, ip= url)
         
+        try:
+
+            self.store.put('log', name= username, pswd= password, ip= url)
+        
+        except:
+            
+            pass
         

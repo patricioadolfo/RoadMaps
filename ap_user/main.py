@@ -50,8 +50,7 @@ class RoadMapsApp(MDApp):
     icon= 'truck.png'
     
     store = JsonStore('load.json')
-    
-    
+        
     def load_log(self,):
         
         try:
@@ -73,9 +72,7 @@ class RoadMapsApp(MDApp):
     def on_checkbox_active(self, checkbox, value):
         
         if value:
-            
-            print(checkbox.parent.parent.children[1].children[0].children[0].text)     
-            
+    
             self.root.ids.screen_manager.user.printer= checkbox.parent.parent.children[1].children[0].children[0].text    
     
     def build(self):

@@ -87,47 +87,24 @@
     name: 'homescreen'
     
     MDLabel:
-        size_hint_y: .2
+        size_hint_y: .15
         id: text_home
-        pos_hint: {'center_x': .5,"center_y": .9}
+        pos_hint: {'center_x': .2,"center_y": .9}
         bold: True
         font_style: "Title"
         halign: "center"
 
     MDDivider:
-                
-    MDList:
-        id: container
-        
-        MDListItem: 
-            
-            MDListItemSupportingText:
-                id: text_prepared
-            MDListItemTrailingIcon:
-                icon: 'package-variant-closed-plus'
-                id: icon_prep
-
-
-        MDListItem: 
-            
-            MDListItemSupportingText:
-                id: text_onroad
-            MDListItemTrailingIcon:
-                icon: 'package-variant-closed-minus'
-                id: icon_onroad
-
-
-    MDDivider:
-
-    MDLabel:
-        size_hint_y: .1 
-        id: text_time
-        pos_hint: {'center_x': .8,"center_y": .1}
-        bold: True
-        halign: "center"
     
+    MDBoxLayout:
+        size_hint_y: .85
 
+        MDScrollView:
+            do_scroll_x: False
 
+            MDList:
+                id: mdlist
+        
 
 
 <QrScreen>
@@ -459,7 +436,7 @@ MDBoxLayout:
             on_press: 
                 screen_manager.current= 'homescreen'
                 qr_screen.close_cam()
-                home_screen.count_routes()                
+                home_screen.order_list()                
 
         BaseMDNavigationItem
             id: qr_btn

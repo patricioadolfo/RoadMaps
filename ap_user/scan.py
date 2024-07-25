@@ -194,7 +194,7 @@ class QrScreen(MDScreen):
                 self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
             
             self.qr_card.open()
-       
+            
     def close_cam(self,):
         
         try:
@@ -228,9 +228,8 @@ class QrScreen(MDScreen):
                 
                 self.close_cam()
                 
-                self.parent.current= 'qrprinter'
-                
-                
+                self.parent.current= 'qrprinter' 
+                  
                 
             else:
 
