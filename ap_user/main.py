@@ -2,7 +2,6 @@ from kivy.lang import Builder
 from kivy.properties import StringProperty
 from kivymd.app import MDApp
 from kivymd.uix.navigationbar import MDNavigationItem
-from kivymd.uix.screen import MDScreen
 from scan import QrScreen, QrDialog, ScanAnalyze, QrPrinter, Check
 from login import LoginScreen
 from orders import OrdersScreen, OrderCreate, OrderSnack
@@ -74,6 +73,8 @@ class RoadMapsApp(MDApp):
         if value:
     
             self.root.ids.screen_manager.user.printer= checkbox.parent.parent.children[1].children[0].children[0].text    
+    
+            self.store.put('print', print= self.root.ids.screen_manager.user.printer )
     
     def build(self):
 

@@ -2,16 +2,12 @@ from kivy.properties import ObjectProperty
 from camera4kivy import Preview
 from PIL import Image
 from pyzbar.pyzbar import decode
-from kivymd.uix.button import MDIconButton
-from kivymd.uix.label import MDLabel
-from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import mainthread
-from kivymd.uix.card import MDCard
-from kivymd.uix.button import MDButton, MDButtonIcon, MDButtonText
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import MDListItem, MDListItemLeadingIcon, MDListItemHeadlineText, MDListItemSupportingText, MDListItemTertiaryText, MDListItemTrailingCheckbox
-
+import threading
+from time import sleep
 
 class Check(MDListItemTrailingCheckbox):
     pass
@@ -168,6 +164,12 @@ class ScanAnalyze(Preview):
 class QrScreen(MDScreen):
     
     text_qr=''
+    
+    def clear_qr_text(self,):
+        
+        sleep(5)
+        
+        self.text_qr= ''
 
     def on_focus(self,):
         
@@ -194,6 +196,8 @@ class QrScreen(MDScreen):
                 self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
             
             self.qr_card.open()
+            
+            threading.Thread(target= self.clear_qr_text).start()
             
     def close_cam(self,):
         
@@ -229,6 +233,10 @@ class QrScreen(MDScreen):
                 self.close_cam()
                 
                 self.parent.current= 'qrprinter' 
+                
+                print(self.parent.ids)
+                
+                self.parent.children[0].list_orders()
                   
                 
             else:

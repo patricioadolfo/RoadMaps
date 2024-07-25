@@ -39,6 +39,14 @@ class LoginScreen(MDScreen):
             self.parent.parent.ids.home_screen.order_list() 
             
             self.save_log(username, password, url)
+            
+            try:
+            
+                self.parent.user.printer = self.store.get('print')['print']
+                
+            except:
+                
+                pass
 
         except:
             

@@ -24,7 +24,6 @@ class OrdersScreen(MDScreen):
                             text= 'De '+ order['origin_name'] + ', preparado el '+ order['preparation_date']
                         ),
                         ids= order,
-                        # on_press= self.node_details
                     )
         list.add_widget(item)
             

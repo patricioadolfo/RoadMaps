@@ -2,7 +2,6 @@ from kivy.lang import Builder
 from kivy.properties import StringProperty
 from kivymd.app import MDApp
 from kivymd.uix.navigationbar import MDNavigationItem
-from kivymd.uix.screen import MDScreen
 from scan import QrScreen, QrDialog, ScanAnalyze
 from login import LoginScreen
 from branch import BranchScreen, BranchDetails

@@ -28,6 +28,7 @@ class HomeScreen(MDScreen):
         list.add_widget(item)
             
     def order_list(self,):
+
         
         self.ids.text_home.text= 'Hola '+ self.parent.user.id_user['username'] 
         
