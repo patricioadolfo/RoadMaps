@@ -12,7 +12,7 @@
         MDBoxLayout:
             orientation: 'horizontal'
             padding:10
-            size_hint_y: .1
+            size_hint_y: .2
             MDIconButton:
                 icon: 'keyboard-backspace' 
                 pos_hint: {'center_x': .1, 'center_y': .5}
@@ -25,43 +25,37 @@
                 color: app.theme_cls.primaryColor
                 bold: True       
                 pos_hint: {'center_x': .5, 'center_y': .5}
+            MDFabButton:
+                style:'standard'
+                icon:"printer" 
+                color_map: 'surface'
+                pos_hint: {"center_x": .8, 'center_y': .5}
+                line_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
+                on_press: 
+                    root.conect_printer()
+                    root.list_printers()
+            MDFabButton:
+                style:'standard' 
+                icon:"package-variant" 
+                color_map: 'surface'
+                pos_hint: {"center_x": .9 , 'center_y': .5}
+                line_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
+                on_press: 
+                    root.list_orders()
 
         MDDivider:
 
-        MDBoxLayout:
-            orientation: 'horizontal'
-            padding:20
-            size_hint_y: .9
-            MDBoxLayout:
-                size_hint_x: .2
-                orientation: 'vertical'
-                padding:5
-                MDFabButton:
-                    style:'standard'
-                    size_hint: None, None 
-                    icon:"printer" 
-                    color_map: 'surface'
-                    pos_hint: {"center_x": .5, 'center_y': 1}
-                    line_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
-                    on_press: 
-                        root.conect_printer()
-                        root.list_printers()
-                MDFabButton:
-                    style:'standard' 
-                    size_hint: None, None
-                    icon:"package-variant" 
-                    color_map: 'surface'
-                    pos_hint: {"center_x": .5, 'center_y': .1}
-                    line_color: [0.047058823529411764, 0.403921568627451, 0.5019607843137255, 1.0]
-                    on_press: 
-                        root.list_orders()
-            
-            MDScrollView:
-                do_scroll_x: False
-                size_hint_x: .8
-                MDList:
-                    id: mdlist
-            
+        MDScrollView:
+            do_scroll_x: False
+            size_hint_y: .8
+            MDList:
+                id: mdlist
+
+
+
+
+
+
 <OrderSnack>
     y: dp(14)
     orientation: "horizontal"

@@ -30,13 +30,13 @@ class QrPrinter(MDScreen):
            
         item= MDListItem(
                         MDListItemLeadingIcon(
-                            icon='package-variant-plus',
+                            icon='printer',
                                 ),
                         MDListItemSupportingText(
                             text= '## '+ str(order['id']),
                         ),
                         MDListItemTertiaryText(
-                            text= 'De '+ order['origin_name'] + ', preparado el '+ order['preparation_date']
+                            text= 'Para '+ order['destination_name'] + ', preparado el '+ order['preparation_date']
                         ),
                         ids= order,
                         on_press= self.print_order
