@@ -60,10 +60,16 @@ class QrDialog(MDDialog):
             return detail_text
             
     def receive_route(self):
-    
-        self.user.on_road(str(self.dict['id']))
         
-        self.close_card()
+        try:
+    
+            self.user.on_road(str(self.dict['id']))
+        
+            self.close_card()
+        
+        except:
+            
+            pass
              
 class ScanAnalyze(Preview):
     
@@ -97,28 +103,34 @@ class QrScreen(MDScreen):
         
     def qr_result(self,):
         
-        if self.parent.user.id_user != {}:
+        try:
             
-            self.qr_card= QrDialog()
-     
-            if self.text_qr != '':
-            
-                route= self.parent.user.view_road(self.text_qr)
+            if self.parent.user.id_user != {}:
                 
-                if route != 'Error!':
+                self.qr_card= QrDialog()
+        
+                if self.text_qr != '':
                 
-                    self.qr_card.text_card(route, self.parent.user)
-                
+                    route= self.parent.user.view_road(self.text_qr)
+                    
+                    if route != 'Error!':
+                    
+                        self.qr_card.text_card(route, self.parent.user)
+                    
+                    else:
+                        self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
+    
                 else:
                     self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
-  
-            else:
-                self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
+                
+                self.qr_card.open()
+                
+                threading.Thread(target= self.clear_qr_text).start()
+
+        except:
             
-            self.qr_card.open()
-            
-            threading.Thread(target= self.clear_qr_text).start()
-       
+            self.parent.go_snack('Error de conexión')
+
     def close_cam(self,):
         
         try:
@@ -127,7 +139,8 @@ class QrScreen(MDScreen):
             self.ids.scan.disconnect_camera()
             
         except:
-            print("fsdf")
+            
+            pass
             
     @mainthread
     def got_result(self, result):

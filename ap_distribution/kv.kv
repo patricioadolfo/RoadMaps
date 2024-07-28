@@ -1,6 +1,6 @@
 <RmScreenManager>
 
-<HomeSnack>
+<Snack>
     y: dp(14)
     orientation: "horizontal"
     pos_hint: {"center_x": .5, "center_y": .5}
@@ -23,8 +23,10 @@
         halign: "center"
 
     MDDivider:
-                
+    
+        
     MDList:
+
         id: container
         
         MDListItem: 
@@ -43,19 +45,6 @@
             MDListItemTrailingIcon:
                 icon: 'package-variant-closed-minus'
                 id: icon_onroad
-
-
-    MDDivider:
-
-    MDLabel:
-        size_hint_y: .1 
-        id: text_time
-        pos_hint: {'center_x': .8,"center_y": .1}
-        bold: True
-        halign: "center"
-    
-
-
 
 
 <QrScreen>
@@ -380,8 +369,9 @@ MDBoxLayout:
             disabled: True
             on_press: 
                 qr_screen.close_cam()
-                branch_screen.branch_nodes(screen_manager, branch_details)
                 screen_manager.current= 'branchscreen'
+                branch_screen.branch_nodes(branch_details)
+                
               
             
 

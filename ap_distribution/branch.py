@@ -5,65 +5,69 @@ from kivymd.uix.list import MDListItem, MDListItemLeadingIcon, MDListItemHeadlin
 class BranchScreen(MDScreen):
     
     def node_details(self, instance, *args):
+        
+        try:
 
-        prepared= self.screen_manager.user.view_road('?q='+ str({"status":"p", "origin": instance.ids['id']}).replace("'",'"').replace(' ',''))
-                                                    
-        
-        on_road= self.screen_manager.user.view_road('?q='+ str({"status":"c", "destination": instance.ids['id']}).replace("'",'"').replace(' ',''))
-             
-        self.branch_details.ids.branch_details_lb.text= instance.ids['name']
-        
-        for item in prepared['results']:
+            prepared= self.parent.user.view_road('?q='+ str({"status":"p", "origin": instance.ids['id']}).replace("'",'"').replace(' ',''))
+                                                        
             
-            self.branch_details.ids.branch_details_p.add_widget(MDListItem(
-                                                        MDListItemHeadlineText(
-                                                            text= '###'+ str(item['id']),
-                                                        ),
-                                                        MDListItemSupportingText(
-                                                            text= '     Para: '+item['destination_name'],
-                                                        ),
-                                                        MDListItemTertiaryText(
-                                                            text= '         Preparado: '+item['preparation_date'],
-                                                        ),
-                                                        MDListItemTrailingIcon(
-                                                            icon="package-variant-closed-plus",
-                                                        ),
-                                                    )
-                                              )
-
-        
-        for item in on_road['results']:
+            on_road= self.parent.user.view_road('?q='+ str({"status":"c", "destination": instance.ids['id']}).replace("'",'"').replace(' ',''))
+                
+            self.branch_details.ids.branch_details_lb.text= instance.ids['name']
             
-            self.branch_details.ids.branch_details_c.add_widget(MDListItem(
-                                                        MDListItemHeadlineText(
-                                                            text= '###'+ str(item['id']),
+            for item in prepared['results']:
+                
+                self.branch_details.ids.branch_details_p.add_widget(MDListItem(
+                                                            MDListItemHeadlineText(
+                                                                text= '###'+ str(item['id']),
                                                             ),
-                                                        MDListItemSupportingText(
-                                                            text= '     De: '+item['origin_name'],
+                                                            MDListItemSupportingText(
+                                                                text= '     Para: '+item['destination_name'],
                                                             ),
-                                                        MDListItemTertiaryText(
-                                                            text= '         Preparado: '+item['preparation_date'],
+                                                            MDListItemTertiaryText(
+                                                                text= '         Preparado: '+item['preparation_date'],
                                                             ),
-                                                        MDListItemTrailingIcon(
-                                                            icon="package-variant-minus",
+                                                            MDListItemTrailingIcon(
+                                                                icon="package-variant-closed-plus",
                                                             ),
-                                                        ))
+                                                        )
+                                                )
+
+            
+            for item in on_road['results']:
+                
+                self.branch_details.ids.branch_details_c.add_widget(MDListItem(
+                                                            MDListItemHeadlineText(
+                                                                text= '###'+ str(item['id']),
+                                                                ),
+                                                            MDListItemSupportingText(
+                                                                text= '     De: '+item['origin_name'],
+                                                                ),
+                                                            MDListItemTertiaryText(
+                                                                text= '         Preparado: '+item['preparation_date'],
+                                                                ),
+                                                            MDListItemTrailingIcon(
+                                                                icon="package-variant-minus",
+                                                                ),
+                                                            ))
         
 
         
-        self.screen_manager.current= 'branchdetailsscreen'
+            self.parent.current= 'branchdetailsscreen'
+            
+        except:
+            
+            self.parent.go_snack('Error de conexión')
         
-    def branch_nodes(self, screen_manager, branch_details):
-        
+    def branch_nodes(self, branch_details):
+           
         self.branch_details= branch_details
-        
-        self.screen_manager= screen_manager
 
         self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
         
-        if screen_manager.user.id_user != {}:
+        if self.parent.user.id_user != {}:
         
-            nodes= screen_manager.user.nodes_origin
+            nodes= self.parent.user.nodes_origin
             
             for node in nodes:
                 self.ids.mdlist.add_widget(MDListItem(
@@ -90,8 +94,7 @@ class BranchScreen(MDScreen):
 class BranchDetails(MDScreen):
     
     def back_branchsecreen(self, *args):
-        
-        
+            
         self.ids.branch_details_p.clear_widgets(self.ids.branch_details_p.children)
         
         self.ids.branch_details_c.clear_widgets(self.ids.branch_details_c.children)

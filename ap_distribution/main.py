@@ -2,21 +2,24 @@ from kivy.lang import Builder
 from kivy.properties import StringProperty
 from kivymd.app import MDApp
 from kivymd.uix.navigationbar import MDNavigationItem
-from scan import QrScreen, QrDialog, ScanAnalyze
-from login import LoginScreen
-from branch import BranchScreen, BranchDetails
-from home import HomeScreen, HomeSnack
-import models   
 from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.utils.set_bars_colors import set_bars_colors
 from kivy.storage.jsonstore import JsonStore
+from kivymd.uix.snackbar import MDSnackbar
 
-
+from scan import QrScreen, QrDialog, ScanAnalyze
+from login import LoginScreen
+from branch import BranchScreen, BranchDetails
+from home import HomeScreen
+import models  
 
 #from android.permissions import request_permissions, Permission
 
 #request_permissions([Permission.CAMERA, Permission.INTERNET])
 
+
+class Snack(MDSnackbar):
+    pass
 
 class BaseMDNavigationItem(MDNavigationItem):
     
@@ -33,7 +36,14 @@ class RmScreenManager(MDScreenManager):
            self.current= 'loginscreen'
            
         else:
-            self.user.logOut()
+            
+            try:
+                
+                self.user.logOut()
+            
+            except:
+                
+                self.go_snack('Error de conexión')
             
             self.current= 'loginscreen' 
             
@@ -42,6 +52,14 @@ class RmScreenManager(MDScreenManager):
             for btn in btns:
                 
                 btn.disabled= True
+                
+    def go_snack(self, mnj):
+        
+        self.snack= Snack()
+        
+        self.snack.ids.snack_text.text= mnj
+        
+        self.snack.open()
 
     user= models.User()
 
@@ -103,6 +121,6 @@ class RoadMapsApp(MDApp):
             "Dark",      # icons color of status bar
         )
     
-
-
-RoadMapsApp().run()
+if __name__ == "__main__":
+    
+    RoadMapsApp().run()

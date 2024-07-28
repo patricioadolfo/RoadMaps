@@ -3,13 +3,7 @@ from datetime import datetime
 import time
 import socket
 import json
-"""
-http://127.0.0.1:8000/api/api-route/?q=c filtro en camino
-http://127.0.0.1:8000/api/api-route/?q=p filtro preparado
-http://127.0.0.1:8000/api/api-route/?q=r filtro recibido
-http://192.168.0.5:8080/api/api-route/?q=p!5 filtro estado preparado, origen 5
 
-"""
 
 class Client():
     
@@ -198,14 +192,6 @@ class User(Route, Client):
         
         return patch
 
-    def view_list(self, arg):
-        
-        self.url= self.url_route
-        
-        get= self.get_url(arg)
-        
-        return get['results']
-
     def view_road(self, query):
         
         self.url= self.url_route
@@ -213,29 +199,4 @@ class User(Route, Client):
         route= self.get_url(query)
         
         return route
-        
-    def view_orders(self, query):
-        
-        self.url= self.url_route
-        
-        route= self.get_url(query)
-        
-        return route
-        
-    def route_create(self, detail, branch):
-        
-        self.url= self.url_route
-        
-        payload= { 
-                    "description": detail,
-                    "preparation_date": datetime.today().strftime("%Y-%m-%d"),
-                    "preparation_time":  time.strftime("%H:%M:%S", time.localtime()),
-                    "status": "p",
-                    "user": self.id_user['id'],
-                    "origin": self.perfil,
-                    "destination": branch['id']
-                  }        
-        
-        post= self.post_url(payload)
-        
-        return post
+               
