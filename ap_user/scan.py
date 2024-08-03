@@ -1,19 +1,21 @@
-from kivy.properties import ObjectProperty
 from camera4kivy import Preview
 from PIL import Image
 from pyzbar.pyzbar import decode
 from kivy.clock import mainthread
+
+from kivy.properties import ObjectProperty
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.list import MDListItem, MDListItemLeadingIcon, MDListItemHeadlineText, MDListItemSupportingText, MDListItemTertiaryText, MDListItemTrailingCheckbox
-import threading
+
 from time import sleep
+from models import deco
 
 class Check(MDListItemTrailingCheckbox):
     pass
 
 class QrPrinter(MDScreen):
-       
+      
     def print_order(self, instance, *args):
         
         try:
@@ -44,24 +46,29 @@ class QrPrinter(MDScreen):
                     )
         list.add_widget(item)
     
-    def list_orders(self,):
-        
-        self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
+    @deco
+    def get_prepared(self):
         
         try:
-        
             if self.parent.user.id_user != {}:
                 
-                prepared= self.parent.user.view_road('?q='+ str({"status":"p", "origin": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
+                self.prepared= self.parent.user.view_road('?q='+ str({"status":"p", "origin": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
 
-                for order in prepared['results']:
-
-                    self.order_item(order, self.ids.mdlist)
-        
+                self.list_orders()
+                
         except:
             
             self.parent.go_snack('Error de conexión')
-               
+    
+    @mainthread
+    def list_orders(self,):
+        
+        self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
+       
+        for order in self.prepared['results']:
+
+            self.order_item(order, self.ids.mdlist)
+                 
     def conect_printer(self,):
         
         try:
@@ -103,7 +110,12 @@ class QrPrinter(MDScreen):
             self.parent.go_snack('Error de conexión')
 
 class QrDialog(MDDialog):
-                
+    
+    @mainthread
+    def qr_open(self):
+        
+        self.open()
+           
     def text_card(self, dict, user):
         
         self.dict= dict
@@ -183,44 +195,56 @@ class QrScreen(MDScreen):
     
     text_qr=''
     
+    @deco
     def clear_qr_text(self,):
         
         sleep(5)
         
         self.text_qr= ''
 
+    @deco
     def on_focus(self,):
         
         self.ids.scan.connect_camera(enable_analyze_pixels = True ,default_zoom=0.0)
+               
+    def get_qr_dialog(self,):  
         
+        self.qr_card= QrDialog()
+        
+        if self.parent.user.id_user != {}:
+                            
+            if self.text_qr != '':
+
+                self.qr_result()  
+    
+    @deco
     def qr_result(self,):
         
         try:
-        
-            if self.parent.user.id_user != {}:
+
+            route= self.parent.user.view_road(self.text_qr)
+            
+            if route != 'Error!':
+            
+                self.qr_card.text_card(route, self.parent.user)
                 
-                self.qr_card= QrDialog()
-        
-                if self.text_qr != '':
+                self.qr_card.qr_open()
                 
-                    route= self.parent.user.view_road(self.text_qr)
-                    
-                    if route != 'Error!':
-                    
-                        self.qr_card.text_card(route, self.parent.user)
-                    
-                    else:
-                        self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
-    
-                else:
-                    self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
+                self.clear_qr_text()
+            
+            else:
                 
-                self.qr_card.open()
+                self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
                 
-                threading.Thread(target= self.clear_qr_text).start()
+                self.qr_card.qr_open()
+                
+                self.clear_qr_text()
+             
         except:
             
             self.parent.go_snack('Error de conexión')
+            
+            self.clear_qr_text()
             
     def close_cam(self,):
         
@@ -259,9 +283,8 @@ class QrScreen(MDScreen):
                 
                 self.parent.current= 'qrprinter' 
                 
-                self.parent.children[0].list_orders()
-                  
-                
+                self.parent.children[0].get_prepared()
+                                  
             else:
 
-                self.qr_result()
+                self.get_qr_dialog()

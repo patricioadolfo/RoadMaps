@@ -1,9 +1,17 @@
 from kivymd.uix.screen import MDScreen
 from kivy.storage.jsonstore import JsonStore
+import asyncio
+from models import deco
+from kivy.clock import mainthread
+from kivymd.uix.floatlayout import MDFloatLayout
+
+
 
 class LoginScreen(MDScreen):
     
-    store = JsonStore('load.json')
+    loaded= False
+    
+    store = JsonStore('load.json') 
     
     def save_log(self, username, password, url):
 
@@ -15,30 +23,39 @@ class LoginScreen(MDScreen):
             
             pass
     
-    def login(self,url, username, password):
-               
-        try:
-            url= url._get_text()
-            
-            username= username._get_text()
-            
-            password= password._get_text()
+    @mainthread
+    def login_b(self,):
+                  
+        self.parent.parent.ids.btn_log.icon= 'logout'    
 
+        self.parent.parent.ids.qr_btn.disabled= False
+        
+        self.parent.parent.ids.order_btn.disabled= False   
+        
+        self.parent.parent.ids.home_btn.disabled= False 
+        
+        self.parent.current= 'homescreen' 
+        
+        self.parent.parent.ids.home_screen.order_list()  
+    
+    @deco    
+    def login_a(self, url, username, password):
+
+        try:
+           
+            url= url._get_text()
+                
+            username= username._get_text()
+                
+            password= password._get_text()
+            
             self.parent.user.log(url, username, password)
-            
-            self.parent.current= 'homescreen'
-            
-            self.parent.parent.ids.btn_log.icon= 'logout'    
-            
-            self.parent.parent.ids.qr_btn.disabled= False
-            
-            self.parent.parent.ids.order_btn.disabled= False   
-            
-            self.parent.parent.ids.home_btn.disabled= False    
-            
-            self.parent.parent.ids.home_screen.order_list() 
-            
+                               
             self.save_log(username, password, url)
+            
+            self.parent.on_road= self.parent.user.view_road('?q='+ str({"status":"c", "origin": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
+
+            self.parent.receiver= self.parent.user.view_road('?q='+ str({"status":"p", "origin": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
             
             try:
             
@@ -47,11 +64,20 @@ class LoginScreen(MDScreen):
             except:
                 
                 pass
-
-        except:
             
-            self.children[-1].text= 'Login Incorrecto'
+            self.login_b()
+            
+            self.parent.stop_progres(self)
         
+        except:
+                
+            self.children[-1].text= 'Login Incorrecto'
+            
+            self.parent.stop_progres(self)
+
+
+
+
 
 
         

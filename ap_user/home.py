@@ -1,6 +1,8 @@
 from kivymd.uix.screen import MDScreen
 from datetime import datetime
 import time
+from models import deco
+from kivy.clock import mainthread
 
 from kivymd.uix.badge import MDBadge
 from kivymd.uix.list import MDListItem, MDListItemLeadingIcon, MDListItemHeadlineText, MDListItemTertiaryText, MDListItemTrailingIcon
@@ -22,20 +24,19 @@ class HomeScreen(MDScreen):
 
                     )
         list.add_widget(item)
-            
+    
+    @mainthread        
     def order_list(self,):
         
         self.ids.text_home.text= 'Hola '+ self.parent.user.id_user['username'] 
        
-        self.parent.go_snack('Actualizado: ' +  time.strftime("%H:%M:%S", time.localtime()) + ' ' + datetime.today().strftime('%d-%m-%Y'))
+        #self.parent.go_snack('Actualizado: ' +  time.strftime("%H:%M:%S", time.localtime()) + ' ' + datetime.today().strftime('%d-%m-%Y'))
         
         self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
         
         try:
         
             if self.parent.user.id_user != {}:
-                
-                on_road= self.parent.user.view_road('?q='+ str({"status":"c", "origin": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
                         
                 self.ids.mdlist.add_widget(
                     MDListItem(
@@ -46,7 +47,7 @@ class HomeScreen(MDScreen):
                             ), 
                         MDListItemTrailingIcon(
                             MDBadge(
-                            text= str(on_road['count'])  
+                            text= str(self.parent.on_road['count'])  
                             ),
                             icon= 'information-variant',
                         )
@@ -55,11 +56,9 @@ class HomeScreen(MDScreen):
                 
                 self.ids.mdlist.add_widget(MDDivider())
                 
-                for order in on_road['results']:
+                for order in self.parent.on_road['results']:
 
                     self.order_item(order, self.ids.mdlist)
-                
-                receiver= self.parent.user.view_road('?q='+ str({"status":"p", "origin": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
                 
                 self.ids.mdlist.add_widget(
                     MDListItem(
@@ -69,7 +68,7 @@ class HomeScreen(MDScreen):
                             ), 
                         MDListItemTrailingIcon(
                             MDBadge(
-                            text= str(receiver['count'])  
+                            text= str(self.parent.receiver['count'])  
                             ),
                             icon= 'information-variant',
                         )
@@ -78,7 +77,7 @@ class HomeScreen(MDScreen):
                 
                 self.ids.mdlist.add_widget(MDDivider())
                 
-                for order in receiver['results']:
+                for order in self.parent.receiver['results']:
 
                     self.order_item(order, self.ids.mdlist)
         
@@ -86,8 +85,26 @@ class HomeScreen(MDScreen):
             
             self.parent.go_snack('Error de conexión')
                
-
+    @deco
+    def get_order(self,):
         
+        try:
+            
+            self.parent.on_road= self.parent.user.view_road('?q='+ str({"status":"c", "origin": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
+
+            self.parent.receiver= self.parent.user.view_road('?q='+ str({"status":"p", "origin": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
+
+            self.order_list()
+            
+            self.parent.stop_progres(self)
+        
+        except:
+            
+            self.parent.go_snack('Error de conexión')
+            
+            self.parent.stop_progres(self)
+            
+            
 
         
 

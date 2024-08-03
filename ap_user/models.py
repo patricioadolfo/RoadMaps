@@ -3,6 +3,21 @@ from datetime import datetime
 import time
 import socket
 import json
+from threading import Thread
+
+
+
+def deco(funcion):
+    
+    def envolvente(*args):
+         
+        thread = Thread(target=funcion, args=args)
+
+        thread.start()
+        
+        return thread
+        
+    return envolvente
 
 class Client():
     

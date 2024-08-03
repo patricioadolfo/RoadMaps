@@ -3,6 +3,9 @@ from kivymd.uix.list import MDListItem, MDListItemLeadingIcon, MDListItemHeadlin
 from kivymd.uix.badge import MDBadge
 from kivymd.uix.divider import MDDivider
 from kivymd.uix.menu import MDDropdownMenu
+from models import deco
+from kivy.clock import mainthread
+
 
 class OrdersScreen(MDScreen):
        
@@ -18,86 +21,113 @@ class OrdersScreen(MDScreen):
                         MDListItemTertiaryText(
                             text= 'De '+ order['origin_name'] + ', preparado el '+ order['preparation_date']
                         ),
+                        md_bg_color=self.theme_cls.transparentColor,
                         ids= order,
                     )
         list.add_widget(item)
-            
+    
+    @mainthread        
     def order_list(self,):
        
         self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
         
-        try:
-        
-            if self.parent.user.id_user != {}:
+        if self.parent.user.id_user != {}:
+            
+            if self.order_on_road['count'] != 0:
                 
-                on_road= self.parent.user.view_road('?q='+ str({"status":"c", "destination": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
+                text_headeer= 'Tienes '+ str(self.order_on_road['count']) + ' pedidos en camino para recibir'
+            
+            else:
                 
-                if on_road['count'] != 0:
+                text_headeer= 'No tienes pedidos en camino para recibir'
                     
-                    text_headeer= 'Tienes '+ str(on_road['count']) + ' pedidos en camino para recibir'
-                
-                else:
-                    
-                    text_headeer= 'No tienes pedidos en camino para recibir'
+            self.ids.mdlist.add_widget(
+                MDListItem(
+                    MDListItemHeadlineText(
+                        text= text_headeer,
+                        halign= "center"
                         
-                self.ids.mdlist.add_widget(
-                    MDListItem(
-                        MDListItemHeadlineText(
-                            text= text_headeer,
-                            halign= "center"
+                        ), 
+                    MDListItemTrailingIcon(
+                        MDBadge(
+                        text= str(self.order_on_road['count'])  
+                        ),
+                        icon= 'information-variant',
+                    )
+                )
+            )
+            
+            self.ids.mdlist.add_widget(MDDivider())
+            
+            for order in self.order_on_road['results']:
+
+                self.order_item(order, self.ids.mdlist)
+            
                             
-                            ), 
-                        MDListItemTrailingIcon(
-                            MDBadge(
-                            text= str(on_road['count'])  
-                            ),
-                            icon= 'information-variant',
-                        )
+            if self.order_receiver['count'] != 0:
+                
+                text_headeer= 'Tienes '+ str(self.order_receiver['count']) + ' pedidos preprados para recibir'
+            
+            else:
+                
+                text_headeer= 'No tienes pedidos a preparados para recibir'
+            
+            self.ids.mdlist.add_widget(
+                MDListItem(
+                    MDListItemHeadlineText(
+                        text= text_headeer,
+                        halign= "center"
+                        ), 
+                    MDListItemTrailingIcon(
+                        MDBadge(
+                        text= str(self.order_receiver['count'])  
+                        ),
+                        icon= 'information-variant',
                     )
                 )
-                
-                self.ids.mdlist.add_widget(MDDivider())
-                
-                for order in on_road['results']:
+            )
+            
+            self.ids.mdlist.add_widget(MDDivider())
+            
+            for order in self.order_receiver['results']:
 
-                    self.order_item(order, self.ids.mdlist)
-                
-                receiver= self.parent.user.view_road('?q='+ str({"status":"p", "destination": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
-                
-                if receiver['count'] != 0:
-                    text_headeer= 'Tienes '+ str(receiver['count']) + ' pedidos preprados para recibir'
-                else:
-                    text_headeer= 'No tienes pedidos a preparados para recibir'
-                
-                self.ids.mdlist.add_widget(
-                    MDListItem(
-                        MDListItemHeadlineText(
-                            text= text_headeer,
-                            halign= "center"
-                            ), 
-                        MDListItemTrailingIcon(
-                            MDBadge(
-                            text= str(receiver['count'])  
-                            ),
-                            icon= 'information-variant',
-                        )
-                    )
-                )
-                
-                self.ids.mdlist.add_widget(MDDivider())
-                
-                for order in receiver['results']:
+                self.order_item(order, self.ids.mdlist)
+      
+    @deco
+    def get_order(self): 
+        
+        try:       
+            
+            self.order_on_road= self.parent.user.view_road('?q='+ str({"status":"c", "destination": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
+            
+            self.order_receiver= self.parent.user.view_road('?q='+ str({"status":"p", "destination": self.parent.user.perfil}).replace("'",'"').replace(' ',''))
 
-                    self.order_item(order, self.ids.mdlist)
+            self.order_list()
+            
+            self.parent.stop_progres(self)
+                  
         except:
             
-            self.parent.go_snack('Error de conexión')           
-                                
+            self.parent.stop_progres(self)   
+            
+            self.parent.go_snack('Error de conexión')               
+
 class OrderCreate(MDScreen):
     
+    @mainthread
+    def set_fields(self):
+        
+        self.ids.drop_text.text= 'Destino'
+                
+        self.ids.text_detail.text= ''
+        
+        self.ids.drop_text.ids= {}
+
+    @deco 
     def create_order(self,):   
         
         try: 
+
             create = self.parent.user.route_create(self.ids.text_detail.text, self.ids.drop_text.ids)
 
             if create == 400:
@@ -108,9 +138,7 @@ class OrderCreate(MDScreen):
                 
                 self.parent.go_snack('Envio creado con exito')
                 
-                self.ids.drop_text.text= 'Destino'
-                
-                self.ids.text_detail.text= ''
+                self.set_fields()
                 
         except:
             

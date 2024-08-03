@@ -6,6 +6,8 @@ from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.utils.set_bars_colors import set_bars_colors
 from kivy.storage.jsonstore import JsonStore
 from kivymd.uix.snackbar import MDSnackbar
+from kivymd.uix.floatlayout import MDFloatLayout
+from kivy.clock import mainthread
 
 from scan import QrScreen, QrDialog, ScanAnalyze, QrPrinter, Check
 from login import LoginScreen
@@ -13,9 +15,13 @@ from orders import OrdersScreen, OrderCreate
 from home import HomeScreen
 import models   
 
+
 #from android.permissions import request_permissions, Permission
     
 #request_permissions([Permission.CAMERA, Permission.INTERNET])
+
+class Progress(MDFloatLayout):
+    pass
 
 class Snack(MDSnackbar):
     pass
@@ -27,23 +33,28 @@ class BaseMDNavigationItem(MDNavigationItem):
  
 class RmScreenManager(MDScreenManager):
     
+    @models.deco
+    def log_out(self,):
+        
+        self.progress(self.get_screen(self.current))
+
+        try:
+                
+            self.user.logOut()
+            
+        except:
+                
+            self.go_snack('Error de conexión')
+            
+        self.stop_progres(self.get_screen(self.current))
+
     def login_out(self, log, btns):
         
-        if log.icon == 'account-circle-outline':
-           
-           self.current= 'loginscreen'
-           
-        else:
-
-            try:
-                
-                self.user.logOut()
+        self.current= 'loginscreen'
+        
+        if log.icon != 'account-circle-outline': 
             
-            except:
-                
-                self.go_snack('Error de conexión')
-            
-            self.current= 'loginscreen' 
+            self.log_out()
             
             log.icon= 'account-circle-outline'
             
@@ -51,6 +62,7 @@ class RmScreenManager(MDScreenManager):
                 
                 btn.disabled= True
 
+    @mainthread
     def go_snack(self, mnj):
         
         self.snack= Snack()
@@ -58,7 +70,20 @@ class RmScreenManager(MDScreenManager):
         self.snack.ids.snack_text.text= mnj
         
         self.snack.open()
+
+    @mainthread
+    def progress(self,screen):
         
+        self.progres= Progress()
+        
+        screen.add_widget(self.progres)  
+    
+    @mainthread    
+    def stop_progres(self, screen):
+            
+        screen.remove_widget(self.progres)
+
+
     user= models.User()
 
 class RoadMapsApp(MDApp):
