@@ -132,6 +132,7 @@ class QrDialog(MDDialog):
             
             self.ids.destin_dialog.text=  'Para '+ dict['destination_name']
                                  
+    @mainthread
     def close_card(self,):
         
         self.dismiss()      
@@ -163,7 +164,8 @@ class QrDialog(MDDialog):
             detail_text= dict['qr'] + '\n' + dict['msj']
             
             return detail_text
-            
+    
+    @deco        
     def receive_route(self):
         
         try:
@@ -173,12 +175,14 @@ class QrDialog(MDDialog):
             self.close_card()
             
         except:
-            pass
+            
+            self.parent.go_snack('Error de conexión')
         
 class ScanAnalyze(Preview):
     
     extracted_data=ObjectProperty(None)
     
+    @deco
     def analyze_pixels_callback(self, pixels, image_size, image_pos, scale, mirror):
         
         pimage=Image.frombytes(mode='RGBA',size=image_size,data=pixels)
@@ -202,11 +206,21 @@ class QrScreen(MDScreen):
         
         self.text_qr= ''
 
+    @mainthread    
+    def focus(self,):
+        
+        self.parent.stop_progres(self)
+        
+        self.ids.scan.connect_camera(enable_analyze_pixels = True ,default_zoom=0.0)
+    
+    
     @deco
     def on_focus(self,):
         
-        self.ids.scan.connect_camera(enable_analyze_pixels = True ,default_zoom=0.0)
-               
+        sleep(.5)
+        
+        self.focus()   
+                       
     def get_qr_dialog(self,):  
         
         self.qr_card= QrDialog()

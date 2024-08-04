@@ -1,5 +1,17 @@
 <RmScreenManager>
 
+<Progress>
+    id: progress
+    pos_hint: {'center_x': .5, 'center_y': .5}
+    size_hint: None, None
+    size: "49dp", "50dp"
+    md_bg_color: app.theme_cls.transparentColor
+
+    MDCircularProgressIndicator:
+        size_hint: None, None
+        size: "48dp", "48dp"
+        pos_hint: {'center_x': .5, 'center_y': .5}
+
 <Snack>
     y: dp(14)
     orientation: "horizontal"
@@ -271,10 +283,10 @@
             size_hint: None, None
             size: "60dp", "60dp"
             halign: "center"
-            on_release:
-                root.manager.transition.direction = "up"
-                root.login(url, username, password)
-
+            on_press:
+                root.parent.progress(root)
+            on_release:        
+                root.login_a(url, username, password)
 
 
 <BaseMDNavigationItem>
@@ -350,26 +362,31 @@ MDBoxLayout:
             disabled: True
             on_press: 
                 screen_manager.current= 'homescreen'
+                screen_manager.progress(home_screen)
+            on_release:
                 qr_screen.close_cam()
-                home_screen.count_routes()                
+                home_screen.get_count()                 
 
         BaseMDNavigationItem
             id: qr_btn
             icon: "qrcode-scan"
             text: "Qr-Scan"
             disabled: True
-            on_press: 
+            on_press:
+                screen_manager.progress(qr_screen)
+                screen_manager.current= 'qrscreen'     
+            on_release:
                 qr_screen.on_focus()
-                screen_manager.current= 'qrscreen'
 
         BaseMDNavigationItem
             id: branch_btn
             icon: "map-marker-radius-outline"
             text: "Sucursales"
             disabled: True
-            on_press: 
-                qr_screen.close_cam()
-                screen_manager.current= 'branchscreen'
+            on_press:
+                screen_manager.current= 'branchscreen' 
+            on_release:
+                qr_screen.close_cam()   
                 branch_screen.branch_nodes(branch_details)
                 
               

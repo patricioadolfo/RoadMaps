@@ -1,15 +1,10 @@
 from kivymd.uix.screen import MDScreen
 from kivy.storage.jsonstore import JsonStore
-import asyncio
 from models import deco
 from kivy.clock import mainthread
-from kivymd.uix.floatlayout import MDFloatLayout
-
 
 
 class LoginScreen(MDScreen):
-    
-    loaded= False
     
     store = JsonStore('load.json') 
     

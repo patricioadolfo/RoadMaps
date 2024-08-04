@@ -1,58 +1,20 @@
 import requests
 from datetime import datetime
 import time
-import socket
-import json
+from threading import Thread
 
+def deco(funcion):
+    
+    def envolvente(*args):
+         
+        thread = Thread(target=funcion, args=args)
 
-class Client():
-    
-    msj= {}
-    
-    ip= ''
-    
-    port= 0
-    
-    passwd= ''
-    
-    printer= ''
-    
-    def conect(self,):
-                
-        self.port = int(self.port)
+        thread.start()
         
-        self.client_p= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        return thread
         
-        self.client_p.connect((self.ip, self.port))
-        
-        data = self.client_p.recv(2048).decode()
-           
-        self.printers= json.loads(data)
+    return envolvente
 
-    def send(self, data):
-        
-        try:
-            text= """ 
-De: {origen}
-Para: {destino}
-Preprado el: {date} , {time}""".format(origen= data['origin_name'],
-                                        destino= data['destination_name'], 
-                                        date= data['preparation_date'], 
-                                        time= data['preparation_time'] )
-        
-            msj= {'password': self.passwd, 'id': data['id'], 'text': text, 'printer': self.printer}
-            
-        except:
-           msj= {'password': '', 'id': '', 'text': '', 'printer': ''}
-            
-        
-        msj= json.dumps(msj)
-            
-        self.client_p.send(msj.encode())
-          
-    def disconnect(self,):
-        
-        self.client_p.close()
 
 class Route:
     
@@ -99,7 +61,7 @@ class Route:
         
             return post.status_code
 
-class User(Route, Client):
+class User(Route):
     
     def __init__(self,):
         

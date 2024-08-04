@@ -448,7 +448,8 @@ MDBoxLayout:
             text: "Qr-Scan"
             disabled: True
             on_press: 
-                screen_manager.current= 'qrscreen'
+                screen_manager.progress(qr_screen)
+                screen_manager.current= 'qrscreen'                
             on_release:
                 qr_screen.on_focus()
 

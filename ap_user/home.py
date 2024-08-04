@@ -1,6 +1,4 @@
 from kivymd.uix.screen import MDScreen
-from datetime import datetime
-import time
 from models import deco
 from kivy.clock import mainthread
 
@@ -29,9 +27,7 @@ class HomeScreen(MDScreen):
     def order_list(self,):
         
         self.ids.text_home.text= 'Hola '+ self.parent.user.id_user['username'] 
-       
-        #self.parent.go_snack('Actualizado: ' +  time.strftime("%H:%M:%S", time.localtime()) + ' ' + datetime.today().strftime('%d-%m-%Y'))
-        
+               
         self.ids.mdlist.clear_widgets(self.ids.mdlist.children)
         
         try:

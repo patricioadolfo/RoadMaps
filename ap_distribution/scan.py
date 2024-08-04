@@ -3,13 +3,18 @@ from camera4kivy import Preview
 from PIL import Image
 from pyzbar.pyzbar import decode
 from kivy.clock import mainthread
+from models import deco
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
-import threading
 from time import sleep
 
 
 class QrDialog(MDDialog):
+    
+    @mainthread
+    def qr_open(self):
+        
+        self.open()
                 
     def text_card(self, dict, user):
         
@@ -27,6 +32,7 @@ class QrDialog(MDDialog):
             
             self.ids.destin_dialog.text=  'Para '+ dict['destination_name']
                                  
+    @mainthread
     def close_card(self,):
         
         self.dismiss()      
@@ -59,6 +65,7 @@ class QrDialog(MDDialog):
             
             return detail_text
             
+    @deco
     def receive_route(self):
         
         try:
@@ -69,12 +76,13 @@ class QrDialog(MDDialog):
         
         except:
             
-            pass
+            self.parent.go_snack('Error de conexión')
              
 class ScanAnalyze(Preview):
     
     extracted_data=ObjectProperty(None)
     
+    @deco
     def analyze_pixels_callback(self, pixels, image_size, image_pos, scale, mirror):
         
         pimage=Image.frombytes(mode='RGBA', size=image_size, data=pixels)
@@ -91,45 +99,65 @@ class QrScreen(MDScreen):
     
     text_qr=''
     
+    @deco
     def clear_qr_text(self,):
         
         sleep(5)
         
         self.text_qr= ''
-
-    def on_focus(self,):
+    
+    @mainthread    
+    def focus(self,):
+        
+        self.parent.stop_progres(self)
         
         self.ids.scan.connect_camera(enable_analyze_pixels = True ,default_zoom=0.0)
+
+    @deco
+    def on_focus(self,):
         
+        sleep(.5)
+        
+        self.focus()        
+    
+    def get_qr_dialog(self,):  
+        
+        self.qr_card= QrDialog()
+        
+        if self.parent.user.id_user != {}:
+                            
+            if self.text_qr != '':
+
+                self.qr_result()
+    
+    @deco
     def qr_result(self,):
         
-        try:
+        try:    
             
-            if self.parent.user.id_user != {}:
-                
-                self.qr_card= QrDialog()
-        
-                if self.text_qr != '':
-                
-                    route= self.parent.user.view_road(self.text_qr)
+            route= self.parent.user.view_road(self.text_qr)
                     
-                    if route != 'Error!':
+            if route != 'Error!':
                     
-                        self.qr_card.text_card(route, self.parent.user)
+                self.qr_card.text_card(route, self.parent.user)
+                
+                self.qr_card.qr_open()
+                
+                self.clear_qr_text()
                     
-                    else:
-                        self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
-    
-                else:
-                    self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
+            else:
                 
-                self.qr_card.open()
+                self.qr_card.text_card(dict(qr= self.text_qr, msj= 'Qr Invalido'), self.parent.user)
                 
-                threading.Thread(target= self.clear_qr_text).start()
+                self.qr_card.qr_open()
+                
+                self.clear_qr_text()
 
         except:
             
             self.parent.go_snack('Error de conexión')
+            
+            self.clear_qr_text()
 
     def close_cam(self,):
         
@@ -149,7 +177,7 @@ class QrScreen(MDScreen):
             
             self.text_qr = result.data.decode('utf-8')
 
-            self.qr_result()
+            self.get_qr_dialog()
 
 
         

@@ -5,8 +5,6 @@ import socket
 import json
 from threading import Thread
 
-
-
 def deco(funcion):
     
     def envolvente(*args):
